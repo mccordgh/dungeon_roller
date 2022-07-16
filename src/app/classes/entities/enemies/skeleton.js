@@ -5,6 +5,8 @@ import { Enemy } from '../enemy';
 
 export class Skeleton extends Enemy {
     constructor(handler, x, y, width, height) {
+        super(handler, x, y, width, height);
+        
         this.handler = handler;
         this.x = x;
         this.y = y;

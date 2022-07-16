@@ -5,6 +5,8 @@ import { Item } from '../item';
 
 export class TreasureChest extends Item {
     constructor(handler, x, y, width, height) {
+        super(handler, x, y, width, height);
+        
         this.handler = handler;
         this.x = x;
         this.y = y;

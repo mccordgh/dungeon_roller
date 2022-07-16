@@ -1,9 +1,10 @@
+import { GameConstants } from "../../constants/game-constants";
 import { Assets } from "../assets/assets";
 import { Entity } from "./entity";
 
 export class Champ extends Entity {
-    constructor(handler, x, y) {
-        super(handler, x, y);
+    constructor(handler, x, y, width, height) {
+        super(handler, x, y, width, height);
 
         this.handler = handler;
         this.x = x;
@@ -15,7 +16,7 @@ export class Champ extends Entity {
 
         this.bannerAssets = Assets.getAssets('white-banner');
 
-        this.type = gameConstants.TYPES.HERO;
+        this.type = GameConstants.TYPES.HERO;
     }
 
     static getDisplayName() {
@@ -41,15 +42,17 @@ export class Champ extends Entity {
         // this.xMove = this.speed * dt;
 
         // this.move();
-        this.assets.icon.tick();
+        // this.assets.icon.tick();
     }
 
     render(graphics) {
         graphics.drawSprite(this.bannerAssets, this.x - 16, this.y - 16, 64, 64);
 
-        if (this.getAnimationFrame()) {
-            graphics.drawSprite(this.getAnimationFrame(), this.x, this.y, this.width, this.height);
-        }
+        graphics.drawSprite(this.assets.icon, this.x, this.y, this.width, this.height);
+
+        // if (this.getAnimationFrame()) {
+        //     graphics.drawSprite(this.getAnimationFrame(), this.x, this.y, this.width, this.height);
+        // }
 
         // ****** DRAW BOUNDING BOX
         // graphics.fillStyle = "purple";

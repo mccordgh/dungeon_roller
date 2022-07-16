@@ -1,8 +1,9 @@
+import { GameConstants } from "../../constants/game-constants";
 import { Entity } from "./entity";
 
 export class Item extends Entity {
-    constructor(handler, x, y) {
-        super(handler, x, y);
+    constructor(handler, x, y, width, height) {
+        super(handler, x, y, width, height);
 
         this.handler = handler;
         this.x = x;
@@ -12,7 +13,7 @@ export class Item extends Entity {
         // this.health = 50;
         // this.baseAttack = 4;
 
-        this.type = gameConstants.TYPES.Item;
+        this.type = GameConstants.TYPES.ITEM;
     }
 
     static getDisplayName() {
@@ -38,13 +39,14 @@ export class Item extends Entity {
         // this.xMove = this.speed * dt;
 
         // this.move();
-        this.assets.animations['icon'].tick();
+        // this.assets.animations['icon'].tick();
     }
 
     render(graphics) {
-        if (this.getAnimationFrame()) {
-            graphics.drawSprite(this.getAnimationFrame(), this.x, this.y, this.width, this.height);
-        }
+        graphics.drawSprite(this.assets.icon, this.x, this.y, this.width, this.height);
+        // if (this.getAnimationFrame()) {
+        //     graphics.drawSprite(this.getAnimationFrame(), this.x, this.y, this.width, this.height);
+        // }
 
         // ****** DRAW BOUNDING BOX
         // graphics.fillStyle = "purple";

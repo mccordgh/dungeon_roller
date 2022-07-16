@@ -2,7 +2,7 @@ import { GameState } from './states/game-state';
 import { ManagerHandler } from './helpers/manager-handler';
 
 import { GameConstants } from '../constants/game-constants';
-import { StartMenuWorld } from './worlds/start-menu-world';
+// import { StartMenuWorld } from './worlds/start-menu-world';
 import { WorldOne } from './worlds/world-one';
 
 export class Game {

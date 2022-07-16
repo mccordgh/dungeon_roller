@@ -42,8 +42,8 @@ let config = {
     new HtmlWebpackInlineSourcePlugin(HtmlWebpackPlugin),
     new CopyWebpackPlugin({
         patterns: [
-            { from: 'src/resources/*', to: '' },
-            { from: 'src/music/*', to: '' },
+            { from: 'src/resources/**', to: '' },
+            { from: 'src/music/**', to: '' },
             // { from: 'src/sfx/*', to: '' },
         ],
     }),

@@ -62,17 +62,10 @@ export const GameConstants = {
     RADIO_HEIGHT: 74,
 
     TYPES: {
-        TELEBUTTONS: 'tele-buttons',
-        EMAIL_ITEMS: 'email-items',
-        EMAIL_INBOX_ITEMS: 'email-inbox-items',
-        FOOTAGE_ITEMS: 'footage-items',
-        FOOTAGE_LIBRARY_ITEMS: 'footage-library-items',
-        SETTINGS_ITEMS: 'settings-items',
-        SETTINGS_WINDOW_ITEMS: 'settings-window-items',
+        HERO: "hero",
+        ENEMY: "enemy",
+        ITEM: "item",
         INTERACTIVE: 'interactive',
-        // Make sure no one uses COMPUTER type except computer-screen.
-        COMPUTER: 'computer',
-        COMPUTER_APP: 'computer-app',
     },
 
     FINGER_WIDTH: 16,

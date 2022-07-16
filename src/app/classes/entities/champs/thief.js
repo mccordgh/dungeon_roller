@@ -5,6 +5,8 @@ import { Assets } from '../../assets/assets';
 
 export class Thief extends Champ {
     constructor(handler, x, y, width, height) {
+        super(handler, x, y, width, height);
+        
         this.handler = handler;
         this.x = x;
         this.y = y;
