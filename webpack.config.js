@@ -42,7 +42,10 @@ let config = {
     new HtmlWebpackInlineSourcePlugin(HtmlWebpackPlugin),
     new CopyWebpackPlugin({
         patterns: [
-            { from: 'src/resources/**', to: '' },
+            { from: 'src/resources/*', to: '' },
+            { from: 'src/resources/champs/*', to: '' },
+            { from: 'src/resources/enemies/*', to: '' },
+            { from: 'src/resources/items/*', to: '' },
             { from: 'src/music/**', to: '' },
             // { from: 'src/sfx/*', to: '' },
         ],

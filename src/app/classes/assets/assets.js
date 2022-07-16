@@ -18,14 +18,16 @@ export class Assets {
 
         this.path += `/${filename}`;
 
-        console.log({ path: this.path })
-
         const image = ImageLoader.loadImage(this.path);
         this.sheet = new SpriteSheet(image);
         this.animations = {};
     }
 
     static getAssets(name) {
+        if (!assets[name]) {
+            throw new Error(`No asset exists of name: ${name}`);
+        }
+
         return assets[name];
     }
 
@@ -57,31 +59,31 @@ const createAnimationFor = (asset, name, data) => {
 const championSheet = new Assets('champion', 'champion.png', 'champs');
 championSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
 const paladinSheet = new Assets('paladin', 'paladin.png', 'champs');
-paladinSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
-const fighterSheet = new Assets('figher', 'fighter.png', 'champs');
-fighterSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
+paladinSheet.icon = paladinSheet.sheet.crop(0, 0, 32, 32);
+const fighterSheet = new Assets('fighter', 'fighter.png', 'champs');
+fighterSheet.icon = fighterSheet.sheet.crop(0, 0, 32, 32);
 const thiefSheet = new Assets('thief', 'thief.png', 'champs');
-thiefSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
+thiefSheet.icon = thiefSheet.sheet.crop(0, 0, 32, 32);
 const wizardSheet = new Assets('wizard', 'wizard.png', 'champs');
-wizardSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
+wizardSheet.icon = wizardSheet.sheet.crop(0, 0, 32, 32);
 
 /* Enemies */
 const goblinSheet = new Assets('goblin', 'goblin.png', 'enemies');
-goblinSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
+goblinSheet.icon = goblinSheet.sheet.crop(0, 0, 32, 32);
 const skeletonSheet = new Assets('skeleton', 'skeleton.png', 'enemies');
-skeletonSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
+skeletonSheet.icon = skeletonSheet.sheet.crop(0, 0, 32, 32);
 const slimeSheet = new Assets('slime', 'slime.png', 'enemies');
-slimeSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
+slimeSheet.icon = slimeSheet.sheet.crop(0, 0, 32, 32);
 const dragonSheet = new Assets('dragon', 'dragon.png', 'enemies');
-dragonSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
+dragonSheet.icon = dragonSheet.sheet.crop(0, 0, 32, 32);
 
 /* Items */
 const potionSheet = new Assets('potion', 'potion.png', 'items');
-potionSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
+potionSheet.icon = potionSheet.sheet.crop(0, 0, 32, 32);
 const scrollSheet = new Assets('scroll', 'scroll.png', 'items');
-scrollSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
+scrollSheet.icon = scrollSheet.sheet.crop(0, 0, 32, 32);
 const treasureChestSheet = new Assets('treasure-chest', 'treasure-chest.png', 'items');
-treasureChestSheet.icon = championSheet.sheet.crop(0, 0, 32, 32);
+treasureChestSheet.icon = treasureChestSheet.sheet.crop(0, 0, 32, 32);
 
 /* Cursors */
 const cursor = new Assets('cursor', 'cursor.png');
@@ -265,3 +267,9 @@ whiteBanner.icon = whiteBanner.sheet.crop(0, 0, 64, 64);
 
 // const codersGame = new Assets('codersGame', 'the-coders-game-icon.png');
 // codersGame.icon = codersGame.sheet.crop(0, 0, 64, 64);
+
+
+
+
+
+

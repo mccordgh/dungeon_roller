@@ -64,7 +64,8 @@ export const GameConstants = {
     TYPES: {
         HERO: "hero",
         ENEMY: "enemy",
-        ITEM: "item",
+        BLACK_ITEM: "black-item",
+        WHITE_ITEM: "white-item",
         INTERACTIVE: 'interactive',
     },
 

@@ -9,6 +9,10 @@ export class GraphicsManager {
 
     customizeContext() {
         CanvasRenderingContext2D.prototype.drawSprite = (asset, x = 0, y = 0, width, height) => {
+            if (!asset) {
+                throw new Error(`asset is undefined in GraphicsManager.drawSprite!!`);
+            }
+
             if (!width) {
                 width = asset.width;
             }

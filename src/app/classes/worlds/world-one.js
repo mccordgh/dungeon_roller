@@ -14,6 +14,7 @@ import { Dragon } from '../entities/enemies/dragon';
 import { Potion } from '../entities/items/potion';
 import { Scroll } from '../entities/items/scroll';
 import { TreasureChest } from '../entities/items/treasure-chest';
+import { Assets } from "../assets/assets";
 
 let counter = 0;
 
@@ -44,6 +45,9 @@ export class WorldOne {
         // this.state = this.states.IDLE;
         this.state = this.states.INITIALIZE;
         // this.state = this.states.TEST_INIT;
+
+        this.testAssets = Assets.getAssets('white-banner');
+        this.testChamp = Assets.getAssets('champion');
     }
 
     // addCorrectPhoneDialogue(callback) {
@@ -141,23 +145,20 @@ export class WorldOne {
 
     loadEntities() {
         const entities = [
-            new Champion(this.handler, 0, 0),
-            new Fighter(this.handler, 32, 0),
-            new Paladin(this.handler, 64, 0),
-            new Thief(this.handler, 96, 0),
-            new Wizard(this.handler, 128, 0),
+            new Champion(this.handler, 64 * 1, 32),
+            new Fighter(this.handler, 64 * 2, 32),
+            new Paladin(this.handler, 64 * 3, 32),
+            new Thief(this.handler, 64 * 4, 32),
+            new Wizard(this.handler, 64 * 5, 32),
 
-            new Dragon(this.handler, 96, 32),
-            new Goblin(this.handler, 0, 32),
-            new Skeleton(this.handler, 32, 32),
-            new Slime(this.handler, 64, 32),
+            new Dragon(this.handler, 64 * 1, 128),
+            new Goblin(this.handler, 64 * 2, 128),
+            new Skeleton(this.handler, 64 * 3, 128),
+            new Slime(this.handler, 64 * 4, 128),
 
-            new Potion(this.handler, 0, 64),
-            new Scroll(this.handler, 32, 64),
-            new TreasureChest(this.handler, 64, 64),
-            // new ComputerScreen(this.handler, 256, 136),
-            // new Radio(this.handler, 52, 62),
-            // new Telephone(this.handler, 0, 480),
+            new Potion(this.handler, 64 * 1, 224),
+            new Scroll(this.handler,  64 * 2, 224),
+            new TreasureChest(this.handler, 64 * 3, 224),
         ];
 
         entities.forEach(entity => {
@@ -196,6 +197,7 @@ export class WorldOne {
 
     render(graphics) {
         // this.drawBackground(graphics);
+        // graphics.drawSprite(this.testAssets.icon, 32, 32, 64, 64);
 
         switch (this.state) {
             case this.states.TEST_INIT:

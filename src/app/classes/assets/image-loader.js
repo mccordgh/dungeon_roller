@@ -4,7 +4,7 @@ export class ImageLoader {
 
         image.src = path;
 
-        if (!image) {
+        image.onerror = () => {
             throw new Error(`Image not found at path ${path}`);
         }
 

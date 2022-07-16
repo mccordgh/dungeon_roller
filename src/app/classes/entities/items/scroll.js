@@ -1,9 +1,9 @@
 import { Assets } from '../../assets/assets';
-import { Item } from '../item';
+import { WhiteItem } from './white-item';
 
 // const doesNotCollide = [GameConstants.TYPES.GARDEN, GameConstants.TYPES.PLOT, GameConstants.TYPES.LANE];
 
-export class Scroll extends Item {
+export class Scroll extends WhiteItem {
     constructor(handler, x, y, width, height) {
         super(handler, x, y, width, height);
         

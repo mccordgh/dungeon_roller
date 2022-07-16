@@ -46,7 +46,7 @@ export class Champ extends Entity {
     }
 
     render(graphics) {
-        graphics.drawSprite(this.bannerAssets, this.x - 16, this.y - 16, 64, 64);
+        graphics.drawSprite(this.bannerAssets.icon, this.x - 16, this.y - 8, 64, 64);
 
         graphics.drawSprite(this.assets.icon, this.x, this.y, this.width, this.height);
 
