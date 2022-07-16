@@ -4,6 +4,10 @@ export class ImageLoader {
 
         image.src = path;
 
+        if (!image) {
+            throw new Error(`Image not found at path ${path}`);
+        }
+
         return image;
     }
 }

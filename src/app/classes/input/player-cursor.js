@@ -21,8 +21,7 @@ export class PlayerCursor {
         };
 
         this.assets = {
-            hand: Assets.getAssets('hand2').pointer,
-            arrow: Assets.getAssets('cursor2').pointer,
+            cursor: Assets.getAssets('cursor').pointer,
         };
 
         this.swapToComputer();

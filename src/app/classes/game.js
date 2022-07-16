@@ -12,16 +12,15 @@ export class Game {
         this.graphicsManager = this.managerHandler.createGraphicsManager();
         this.stateManager = this.managerHandler.createStateManager();
         this.mouseManager = this.managerHandler.createMouseManager();
-        this.managerHandler.createEmailManager();
-        this.managerHandler.createFootageManager();
+        // this.managerHandler.createEmailManager();
+        // this.managerHandler.createFootageManager();
         this.managerHandler.createSoundManager();
-        this.managerHandler.createSettingsManager();
+        // this.managerHandler.createSettingsManager();
 
-        const world = new StartMenuWorld(this.managerHandler);
-        // const world = this.managerHandler.setWorld(new WorldOne(this.managerHandler));
+        const world = new WorldOne(this.managerHandler);
         this.managerHandler.setWorld(world);
+        
         world.init();
-
 
         const gameState = new GameState(this.managerHandler, world);
         this.stateManager.setState(gameState);

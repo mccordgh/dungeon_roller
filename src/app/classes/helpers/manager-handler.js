@@ -3,10 +3,7 @@ import { GraphicsManager } from "../graphics/graphics-manager";
 import { EntityManager } from '../entities/entity-manager';
 import { StateManager } from '../states/state-manager';
 import { WorldOne } from '../worlds/world-one';
-import { EmailManager } from '../entities/static-entities/computer-screen/computer-apps/email/email-manager';
-import { FootageManager } from '../entities/static-entities/computer-screen/computer-apps/footage/footage-manager';
 import { SoundManager } from '../sounds/sound-manager';
-import { SettingsManager } from '../entities/static-entities/computer-screen/computer-apps/settings/settings-manager';
 import { GameState } from '../states/game-state';
 
 export class ManagerHandler {
@@ -21,14 +18,6 @@ export class ManagerHandler {
         this.stateManager = null;
         this.uiManager = null;
         this.world = null;
-    }
-
-    getEmailManager() {
-        return this.emailManager;
-    }
-
-    getFootageManager() {
-        return this.footageManager;
     }
 
     getEntityManager() {
@@ -47,10 +36,6 @@ export class ManagerHandler {
         return this.mouseManager;
     }
 
-    getSettingsManager() {
-        return this.settingsManager;
-    }
-
     getSoundManager() {
         return this.soundManager;
     }
@@ -63,24 +48,12 @@ export class ManagerHandler {
         return this.entityManager = new EntityManager(this);
     }
 
-    createEmailManager() {
-        return this.emailManager = new EmailManager(this);
-    }
-
-    createFootageManager() {
-        return this.footageManager = new FootageManager(this);
-    }
-
     createGraphicsManager() {
         return this.graphicsManager = new GraphicsManager();
     }
 
     createMouseManager() {
         return this.mouseManager = new MouseManager(this);
-    }
-
-    createSettingsManager() {
-        return this.settingsManager = new SettingsManager(this);
     }
 
     createSoundManager() {

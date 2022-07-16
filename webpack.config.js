@@ -5,16 +5,16 @@ const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 // const CompressionPlugin = require('compression-webpack-plugin');
 
-// const isProduction = process.env.npm_lifecycle_event === 'build';
+const isProduction = process.env.npm_lifecycle_event === 'build';
 
 let htmlConfig = {
   filename: 'index.html',
   template: 'index.html'
 };
 
-// if (isProduction) {
-//   htmlConfig.inlineSource = '.(js)$'
-// }
+if (isProduction) {
+  htmlConfig.inlineSource = '.(js)$'
+}
 
 let config = {
   mode: 'development',
@@ -39,17 +39,15 @@ let config = {
     },
   plugins: [
     new HtmlWebpackPlugin(htmlConfig),
-    new HtmlWebpackInlineSourcePlugin(),
-    new CopyWebpackPlugin([
-      { from: 'src/resources/*', to: '' },
-      { from: 'src/music/*', to: '' },
-      { from: 'src/sfx/*', to: '' },
-      ])
+    new HtmlWebpackInlineSourcePlugin(HtmlWebpackPlugin),
+    new CopyWebpackPlugin({
+        patterns: [
+            { from: 'src/resources/*', to: '' },
+            { from: 'src/music/*', to: '' },
+            // { from: 'src/sfx/*', to: '' },
+        ],
+    }),
   ],
-  stats: 'minimal',
-  devServer: {
-    stats: 'minimal'
-  }
 };
 
 // if(!isProduction) {
