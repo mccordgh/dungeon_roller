@@ -20,6 +20,7 @@ import { DragonsLair } from '../entities/locations/dragons-lair';
 import { GraveYard } from '../entities/locations/graveyard';
 import { EnemyParty } from '../enemy-party';
 import { SkipPhaseButton } from '../entities/static-entities/skip-phase-button';
+import { ActionButton } from '../entities/static-entities/action-button';
 
 let counter = 0;
 
@@ -41,6 +42,7 @@ export class WorldOne {
         this.STATES = {
             CHOOSE_MONSTER_TO_ATTACK: "choose-monster-to-attack",
             CHOOSE_ATTACKING_CHAMP: "choose-attacking-champ",
+            CHOOSE_BANNERS_TO_REROLL: "choose-banners-to-reoll",
             GAME_WON: 'game-won',
             INITIALIZE: 'initialize',
             INTRO: 'intro',
@@ -158,6 +160,7 @@ export class WorldOne {
     }
 
     loadEntities() {
+        this.entityManager.addEntity(new ActionButton(this.handler));
         this.entityManager.addEntity(new SkipPhaseButton(this.handler));
         // this.player.getParty().forEach(entity => {
         //     this.entityManager.addEntity(entity);
@@ -235,6 +238,17 @@ export class WorldOne {
                     this.clearSelectedEntities();
                     this.state = this.STATES.USE_HERO_POWER;
                 }
+
+                if (this.selectedEntities.length) {
+                    const actionButton = this.entityManager.findEntityByType(GameConstants.TYPES.ACTION_BUTTON)[0];
+                    
+                    if (!actionButton) {
+                        throw new Error("Action Button type not found!");
+                    }
+
+                    actionButton.setAction("Reroll");
+                    this.state = this.STATES.CHOOSE_BANNERS_TO_REROLL;
+                }
                 break;
             
             case this.STATES.USE_HERO_POWER:
@@ -248,6 +262,7 @@ export class WorldOne {
                 }
                 break;
 
+            case this.STATES.CHOOSE_BANNERS_TO_REROLL:
             case this.STATES.CHOOSE_MONSTER_TO_ATTACK:
             case this.STATES.GAME_WON:
             case this.STATES.INTRO:
@@ -265,27 +280,28 @@ export class WorldOne {
         const centerX = (GameConstants.GAME_WIDTH / 2);
         const centerY = (GameConstants.GAME_HEIGHT / 2);
 
-        switch (this.state) {
-            case this.STATES.TEST_INIT:
-                break;
+        // switch (this.state) {
+        //     case this.STATES.TEST_INIT:
+        //         break;
 
-            case this.STATES.INITIALIZE:
-                break;
+        //     case this.STATES.INITIALIZE:
+        //         break;
 
-            case this.STATES.USE_SCROLLS:
-            case this.STATES.CHOOSE_ATTACKING_CHAMP:
-            case this.STATES.USE_HERO_POWER:
-            case this.STATES.ROLL_ENEMIES:
-            case this.STATES.GAME_WON:
-            case this.STATES.CHOOSE_MONSTER_TO_ATTACK:
-            case this.STATES.INTRO:
-            case this.STATES.TEST:
-            case this.STATES.IDLE:
-                break;
+        //     case this.STATES.CHOOSE_BANNERS_TO_REROLL:
+        //     case this.STATES.USE_SCROLLS:
+        //     case this.STATES.CHOOSE_ATTACKING_CHAMP:
+        //     case this.STATES.USE_HERO_POWER:
+        //     case this.STATES.ROLL_ENEMIES:
+        //     case this.STATES.GAME_WON:
+        //     case this.STATES.CHOOSE_MONSTER_TO_ATTACK:
+        //     case this.STATES.INTRO:
+        //     case this.STATES.TEST:
+        //     case this.STATES.IDLE:
+        //         break;
 
-            default:
-                throw new Error(`World One state "${this.state} is not accounted for`)
-        }
+        //     default:
+        //         throw new Error(`World One state "${this.state} is not accounted for`)
+        // }
 
         this.player.render(graphics);
         this.enemyParty.render(graphics);
@@ -306,17 +322,12 @@ export class WorldOne {
 
         entity.selected = true;
         this.selectedEntities.push(entity);
-
-        console.log(this.selectedEntities);
     }
 
     removeSelectedEntity(entity) {
-        console.log('removing', entity);
-        console.log('before', { ...this.selectedEntities});
-        this.selectedEntities = this.selectedEntities.filter(e => e.id != entity.id);
-        console.log('after', { ...this.selectedEntities});
-
         entity.selected = false;
+        
+        this.selectedEntities = this.selectedEntities.filter(e => e.id != entity.id);
     }
 
     drawStateText(graphics) {
@@ -351,20 +362,22 @@ export class WorldOne {
                 break;
 
             case this.STATES.USE_HERO_POWER:
-                text = "Click your Hero to use their power."
+                text = "Click your Hero to use their power.";
                 text2 = "Or click \"Skip Phase\" to move on.";
                 break;
 
             case this.STATES.USE_SCROLLS:
-                text = "Click a scroll to use it to reroll any number of party and enemy members."
+                text = "Click a scroll to use it to reroll any number of party and enemy members.";
                 text2 = "Or click \"Skip Phase\" to move on.";
-            // case this.STATES.INTRO:
-            // case this.STATES.TEST:
-            // case this.STATES.IDLE:
                 break;
 
-            // default:
-            //     throw new Error(`World One state "${this.state} is not accounted for`)
+            case this.STATES.CHOOSE_BANNERS_TO_REROLL:
+                text = "Choose any number of Enemy Party and Player Party banners to reroll.";
+                text2 = "Then click \"Reroll\" or click \"Skip Phase\" to cancel.";
+                break;
+
+            default:
+                text = "Welcome to Dungeon Roller!";
         }
 
         graphics.drawText(`Phase: ${text}`, 96, GameConstants.GAME_HEIGHT - 112, GameConstants.COLORS.BLACK, true, GameConstants.FONT_SIZE);
@@ -375,6 +388,23 @@ export class WorldOne {
 
         if (text3) {
             graphics.drawText(text3, 96, GameConstants.GAME_HEIGHT - 112 + 64, GameConstants.COLORS.BLACK, true, GameConstants.FONT_SIZE);
+        }
+    }
+
+    skipPhaseClicked() {
+        switch (this.state) {
+            case this.STATES.CHOOSE_BANNERS_TO_REROLL:
+            case this.STATES.USE_SCROLLS:
+                this.clearSelectedEntities();
+                this.state = this.STATES.USE_HERO_POWER;
+                break;
+
+            case this.STATES.USE_HERO_POWER:
+                this.state = this.STATES.CHOOSE_ATTACKING_CHAMP;
+                break;
+        
+            default:
+                throw new Error(`no case for skipPhaseClicked() in state: ${this.state}`)
         }
     }
 

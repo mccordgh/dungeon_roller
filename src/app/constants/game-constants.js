@@ -49,6 +49,7 @@ export const GameConstants = {
         BLACK_ITEM: "black-item",
         WHITE_ITEM: "white-item",
         STATIC_BUTTON: "static-button",
+        ACTION_BUTTON: "action-button",
     },
 
     WHITE_BANNERS: {

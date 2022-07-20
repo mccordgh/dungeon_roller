@@ -31,4 +31,10 @@ export class Scroll extends WhiteItem {
 
         return this.clickableInStates.includes(world.state);
     }
+
+    whenSelected() {
+        const world = this.handler.getWorld();
+
+        world.state = world.STATES.CHOOSE_BANNERS_TO_REROLL;
+    }
 }

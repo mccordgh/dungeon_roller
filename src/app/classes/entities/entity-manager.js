@@ -110,6 +110,12 @@ export class EntityManager {
         return clickableEntities;
     }
 
+    findEntityByType(type) {
+        const match = this.entities.filter(entity => entity.type === type);
+
+        return match;
+    }
+
     mouseClick(data) {
 
         const { x, y } = data;
