@@ -38,6 +38,7 @@ export class WorldOne {
         );
 
         this.STATES = {
+            FIGHT_MONSTERS: "fight-monsters",
             INITIALIZE: 'initialize',
             INTRO: 'intro',
             IDLE: 'idle',
@@ -154,6 +155,49 @@ export class WorldOne {
         // });
     }
 
+    rollEnemies() {
+        const blackBanners = Object.keys(GameConstants.BLACK_BANNERS).map(x => GameConstants.BLACK_BANNERS[x]);
+    
+        this.enemyParty.clearParty();
+    
+        for (let i = 0; i < this.level; i++) {
+            const entityName = rndIndex(blackBanners);
+            let entity;
+            
+            switch (entityName) {
+                case GameConstants.BLACK_BANNERS.DRAGON:
+                    entity = new Dragon(this.handler); 
+                    break;
+                
+                case GameConstants.BLACK_BANNERS.GOBLIN:
+                    entity = new Goblin(this.handler);
+                    break;
+
+                case GameConstants.BLACK_BANNERS.SKELETON:
+                    entity = new Skeleton(this.handler);
+                    break;
+
+                case GameConstants.BLACK_BANNERS.SLIME:
+                    entity = new Slime(this.handler);
+                    break;
+
+                case GameConstants.BLACK_BANNERS.POTION:
+                    entity = new Potion(this.handler);
+                    break;
+
+                case GameConstants.BLACK_BANNERS.TREASURE_CHEST:
+                    entity = new TreasureChest(this.handler);
+                    break;
+
+                default:
+                    throw new Error(`Default case hit for BLACK_BANNERS entity switch. Value: ${entityName}`);
+            }
+
+            entity.id = i;
+            this.enemyParty.addToParty(entity);
+        }
+    }
+
     tick(deltaTime) {
         switch (this.state) {
             case this.STATES.TEST_INIT:
@@ -173,8 +217,11 @@ export class WorldOne {
                 break;
 
             case this.STATES.ROLL_ENEMIES:
+                this.rollEnemies();
+                this.state = this.STATES.FIGHT_MONSTERS;
                 break;
 
+            case this.STATES.FIGHT_MONSTERS:
             case this.STATES.GAME_WON:
             case this.STATES.INTRO:
             case this.STATES.IDLE:
@@ -199,6 +246,7 @@ export class WorldOne {
                 break;
 
             case this.STATES.ROLL_ENEMIES:
+            case this.STATES.FIGHT_MONSTERS:
             case this.STATES.GAME_WON:
             case this.STATES.INTRO:
             case this.STATES.TEST:
@@ -226,11 +274,11 @@ export class WorldOne {
         const graveYardWidth = GameConstants.GAME_WIDTH / 4;
         this.entityManager.addEntity(new GraveYard(this.handler, GameConstants.GAME_WIDTH - graveYardWidth - 32, locationsY, graveYardWidth, GameConstants.GAME_HEIGHT / 2 ));
         
-        this.createNewPlayerParty();
+        this.rollPlayerParty();
         this.loadEntities();
     }
 
-    createNewPlayerParty() {
+    rollPlayerParty() {
         const whiteBanners = Object.keys(GameConstants.WHITE_BANNERS).map(x => GameConstants.WHITE_BANNERS[x]);
     
         this.player.clearParty();
