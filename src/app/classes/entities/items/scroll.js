@@ -30,7 +30,7 @@ export class Scroll extends WhiteItem {
     canBeSelectedInCurrentState() {
         const world = this.handler.getWorld();
 
-        if (world.state === world.STATES.CHOOSE_BANNERS_TO_REROLL && world.selectedRerollScroll && (world.selectRerollScroll.id === this.id)) {
+        if (world.state === world.STATES.CHOOSE_BANNERS_TO_REROLL && world.selectedRerollScroll && (world.selectedRerollScroll.id === this.id)) {
             return false;
         }
 
@@ -43,7 +43,7 @@ export class Scroll extends WhiteItem {
     
             switch (world.state) {
                 case world.STATES.USE_SCROLLS:
-                    world.selectRerollScroll(this);
+                    world.assignRerollScroll(this);
                     break;
 
                 case world.STATES.CHOOSE_BANNERS_TO_REROLL:

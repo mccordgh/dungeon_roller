@@ -39,10 +39,8 @@ export class Player {
     }
 
     replaceRerolledChampsInParty(rerolledChamps) {
-        const test = [ ...this.party];
-
         this.party = this.party.map(member => {
-            rerolledChamps.forEach((champ, index) => {
+            rerolledChamps.forEach((champ) => {
                 if (member.id === champ.id) {
                     champ.index = member.index;
                     this.setPartyMemberPosition(champ);

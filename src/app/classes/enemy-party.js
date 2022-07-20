@@ -30,8 +30,24 @@ export class EnemyParty {
         this.party = [];
     }
 
-    setParty(party) {
-        this.party = party;
+    // setParty(party) {
+    //     this.party = party;
+    // }
+
+    replaceRerolledEnemiesInParty(rerolledEnemies) {
+        console.log('before', [... this.party]);
+        console.log(rerolledEnemies)
+        this.party = this.party.map(member => {
+            rerolledEnemies.forEach((enemy) => {
+                if (member.id === enemy.id) {
+                    enemy.index = member.index;
+                    this.setPartyMemberPosition(enemy);
+                    member = enemy;
+                }
+            });
+
+            return member;
+        });
     }
 
     render(graphics) {
@@ -46,7 +62,7 @@ export class EnemyParty {
     }
 
     setPartyMemberPosition(member) {
-        member.x = this.x + this.padding + (member.width * member.id) + this.padding;
+        member.x = this.x + this.padding + (member.width * member.index) + this.padding;
         member.y = this.y + this.padding;
         test += member.x - this.x;
     }

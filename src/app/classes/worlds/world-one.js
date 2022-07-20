@@ -65,7 +65,7 @@ export class WorldOne {
         // this.selectedRerollScroll = null;
     }
 
-    selectRerollScroll(scroll) {
+    assignRerollScroll(scroll) {
         // if (this.selectedRerollScroll) {
         //     this.selectedRerollScroll.selected = false;
         // }
@@ -178,7 +178,7 @@ export class WorldOne {
         // });
     }
 
-    rollEnemy(index) {
+    rollEnemy(index, champBeingReplaced) {
         const blackBanners = Object.keys(GameConstants.BLACK_BANNERS).map(x => GameConstants.BLACK_BANNERS[x]);
 
         const entityName = rndIndex(blackBanners);
@@ -215,6 +215,10 @@ export class WorldOne {
 
         entity.index = index;
         entity.dontRender = true;
+
+        if (champBeingReplaced) {
+            entity.id = champBeingReplaced.id;
+        }
 
         return entity;
     }
@@ -350,15 +354,20 @@ export class WorldOne {
                     return;
                 }
 
-                // console.log({beforeParty: { ...this.player.getParty()}})
                 const rerolledChamps = this.rerollSelectedEntities(this.selectedChamps);
                 this.player.replaceRerolledChampsInParty(rerolledChamps);
-                // console.log({afterParty: { ...this.player.getParty()}})
 
-                // const rerolledEnemies = this.rerollSelectedEntities(this.selectedEnemies);
-                // this.enemyParty.setParty(rerolledEnemies);
+                const rerolledEnemies = this.rerollSelectedEntities(this.selectedEnemies);
+                this.enemyParty.replaceRerolledEnemiesInParty(rerolledEnemies);
 
-                // this.player.setPartyIndexes();
+                if (this.selectedRerollScroll) {
+                    this.selectedRerollScroll.selected = false;
+                }
+                
+                this.clearSelectedEntities();
+                this.clearActionButtonAction();
+                
+                this.state = this.STATES.USE_HERO_POWER;
         }
     }
 
@@ -372,7 +381,7 @@ export class WorldOne {
 
                     case GameConstants.TYPES.ENEMY:
                     case GameConstants.TYPES.BLACK_ITEM:
-                        return this.rollEnemy(index);
+                        return this.rollEnemy(index, entity);
                 
                     default:
                         console.log(entity);
@@ -469,11 +478,27 @@ export class WorldOne {
         }
     }
 
+    clearActionButtonAction() {
+        const actionButton = this.entityManager.findEntityByType(GameConstants.TYPES.ACTION_BUTTON)[0];
+            
+        if (!actionButton) {
+            throw new Error("Action Button type not found!");
+        }
+
+        actionButton.clearAction();
+    }
+
     skipPhaseClicked() {
         switch (this.state) {
             case this.STATES.CHOOSE_BANNERS_TO_REROLL:
             case this.STATES.USE_SCROLLS:
+                if (this.selectedRerollScroll) {
+                    this.selectedRerollScroll.selected = false;
+                }
+                
                 this.clearSelectedEntities();
+                this.clearActionButtonAction();
+
                 this.state = this.STATES.USE_HERO_POWER;
                 break;
 
