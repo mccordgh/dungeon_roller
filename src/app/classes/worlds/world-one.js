@@ -16,6 +16,8 @@ import { Scroll } from '../entities/items/scroll';
 import { TreasureChest } from '../entities/items/treasure-chest';
 import { Assets } from "../assets/assets";
 import { Player } from '../player';
+import { DragonsLair } from '../entities/locations/dragons-lair';
+import { GraveYard } from '../entities/locations/graveyard';
 
 let counter = 0;
 
@@ -34,17 +36,18 @@ export class WorldOne {
             GameConstants.SPATIAL_GRID_SIZE,
         );
 
-        this.states = {
+        this.STATES = {
             INITIALIZE: 'initialize',
             INTRO: 'intro',
             IDLE: 'idle',
+            ROLL_ENEMIES: "roll-enemies",
             TEST: 'test',
             TEST_INIT: 'test-init',
             GAME_WON: 'game-won',
         };
 
         // this.state = this.states.IDLE;
-        this.state = this.states.INITIALIZE;
+        this.state = this.STATES.INITIALIZE;
         // this.state = this.states.TEST_INIT;
 
         this.player = new Player(handler);
@@ -113,28 +116,28 @@ export class WorldOne {
         //     ),
         // );
 
-        this.state = this.states.GAME_WON;
+        this.state = this.STATES.GAME_WON;
     }
 
     dialogueFinished() {
         switch (this.state) {
-            case this.states.INITIALIZE:
-            case this.states.IDLE:
+            case this.STATES.INITIALIZE:
+            case this.STATES.IDLE:
 
                 break;
 
-            case this.states.INTRO:
+            case this.STATES.INTRO:
                 // this.entityManager.addEntity(new WallPaperTear(this.handler, 832, 120)),
 
                 // this.handler.getSoundManager().play('bgm');
 
-                this.state = this.states.IDLE;
+                this.state = this.STATES.IDLE;
                 break;
 
-            case this.states.GAME_WON:
+            case this.STATES.GAME_WON:
                 this.handler.getEmailManager().addEmail('easterEggs');
                 this.handler.getEmailManager().addEmail('third');
-                this.state = this.states.IDLE;
+                this.state = this.STATES.IDLE;
 
                 break;
 
@@ -151,24 +154,28 @@ export class WorldOne {
 
     tick(deltaTime) {
         switch (this.state) {
-            case this.states.TEST_INIT:
+            case this.STATES.TEST_INIT:
                 // this.entityManager.addEntity(new MeMyselfAndI(this.handler));
                 // this.state = this.states.IDLE;
                 break;
 
-            case this.states.TEST:
+            case this.STATES.TEST:
                 break;
 
 
-            case this.states.INITIALIZE:
-                this.initDialogue();
-
-                this.state = this.states.INTRO;
+            case this.STATES.INITIALIZE:
+                // this.initDialogue();
+                this.init();
+                this.state = this.STATES.ROLL_ENEMIES;
+                // this.state = this.STATES.INTRO;
                 break;
 
-            case this.states.GAME_WON:
-            case this.states.INTRO:
-            case this.states.IDLE:
+            case this.STATES.ROLL_ENEMIES:
+                break;
+
+            case this.STATES.GAME_WON:
+            case this.STATES.INTRO:
+            case this.STATES.IDLE:
                 break;
 
             default:
@@ -179,16 +186,23 @@ export class WorldOne {
     }
 
     render(graphics) {
+        const centerX = (GameConstants.GAME_WIDTH / 2);
+        const centerY = (GameConstants.GAME_HEIGHT / 2);
         // this.drawBackground(graphics);
         // graphics.drawSprite(this.testAssets.icon, 32, 32, 64, 64);
 
         switch (this.state) {
-            case this.states.TEST_INIT:
-            case this.states.INITIALIZE:
-            case this.states.GAME_WON:
-            case this.states.INTRO:
-            case this.states.TEST:
-            case this.states.IDLE:
+            case this.STATES.TEST_INIT:
+                break;
+
+            case this.STATES.INITIALIZE:
+                break;
+
+            case this.STATES.ROLL_ENEMIES:
+            case this.STATES.GAME_WON:
+            case this.STATES.INTRO:
+            case this.STATES.TEST:
+            case this.STATES.IDLE:
                 break;
 
             default:
@@ -197,10 +211,20 @@ export class WorldOne {
 
         this.player.render(graphics);
 
+        graphics.drawText(`Level: ${this.level}`, centerX - 112, centerY - 16, GameConstants.COLORS.RED, true, GameConstants.BIG_FONT_SIZE);
+
         this.entityManager.render(graphics);
     }
 
     init() {
+        this.level = 1;
+        
+        const locationsY = 192;
+        this.entityManager.addEntity(new DragonsLair(this.handler, 32, locationsY, GameConstants.GAME_WIDTH / 4, GameConstants.GAME_HEIGHT / 2 ));
+        
+        const graveYardWidth = GameConstants.GAME_WIDTH / 4;
+        this.entityManager.addEntity(new GraveYard(this.handler, GameConstants.GAME_WIDTH - graveYardWidth - 32, locationsY, graveYardWidth, GameConstants.GAME_HEIGHT / 2 ));
+        
         this.createNewPlayerParty();
         this.loadEntities();
     }

@@ -14,6 +14,8 @@ export const GameConstants = {
     FONT_SIZE: 18,
    
     COLORS: {
+        GREY: "#888888",
+        BLACK: "#333333",
         PURPLE: "#7B538F",
         LIGHT_PURPLE: "#BD7FDB",
         DARK_PURPLE: "#4F355C",

@@ -3,34 +3,12 @@ import { Rectangle } from './collision/rectangle';
 import { GameConstants } from '../../constants/game-constants';
 
 const clickableTypes = [
-    GameConstants.TYPES.INTERACTIVE,
-    GameConstants.TYPES.TELEBUTTONS,
-    GameConstants.TYPES.COMPUTER_APP,
-    GameConstants.TYPES.EMAIL_ITEMS,
-    GameConstants.TYPES.EMAIL_INBOX_ITEMS,
-    GameConstants.TYPES.FOOTAGE_ITEMS,
-    GameConstants.TYPES.FOOTAGE_LIBRARY_ITEMS,
-    GameConstants.TYPES.SETTINGS_ITEMS,
-    GameConstants.TYPES.SETTINGS_WINDOW_ITEMS,
 ];
 
 const dontRenderTypes = [
-    GameConstants.TYPES.TELEBUTTONS,
-    GameConstants.TYPES.COMPUTER_APP,
-    GameConstants.TYPES.EMAIL_INBOX_ITEMS,
-    GameConstants.TYPES.FOOTAGE_LIBRARY_ITEMS,
-    GameConstants.TYPES.SETTINGS_WINDOW_ITEMS,
 ];
 
 const hoverableTypes = [
-    GameConstants.TYPES.COMPUTER,
-    GameConstants.TYPES.COMPUTER_APP,
-    GameConstants.TYPES.EMAIL_ITEMS,
-    GameConstants.TYPES.EMAIL_INBOX_ITEMS,
-    GameConstants.TYPES.FOOTAGE_ITEMS,
-    GameConstants.TYPES.FOOTAGE_LIBRARY_ITEMS,
-    GameConstants.TYPES.SETTINGS_ITEMS,
-    GameConstants.TYPES.SETTINGS_WINDOW_ITEMS,
 ];
 
 let idCounter = 1;

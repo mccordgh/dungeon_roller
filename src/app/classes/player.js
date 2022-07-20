@@ -31,6 +31,7 @@ export class Player {
     }
 
     render(graphics) {
+        graphics.fillStyle = GameConstants.COLORS.DARK_PURPLE;
         graphics.fillRect(this.x, this.y, this.width, this.height);
         
         this.party.forEach(member => {

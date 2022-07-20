@@ -35,7 +35,7 @@ export class GraphicsManager {
             this.graphics.font = `${size}px Roboto Slab`;
 
             if (highlight) {
-                this.graphics.fillStyle = color === 'black';
+                this.graphics.fillStyle = 'black';
                 this.graphics.fillText(text, x - 1, y + 1);
             }
 

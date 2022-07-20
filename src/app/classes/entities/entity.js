@@ -8,6 +8,8 @@ export class Entity {
         this.handler = handler;
         this.x = x;
         this.y = y;
+        this.width = width;
+        this.height = height;
         this.id = -1; // ID will be determined by order of creation when party is created
 
         this.bounds = new Rectangle(0, 0, this.width, this.height);

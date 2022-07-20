@@ -20,7 +20,7 @@ export class Game {
         const world = new WorldOne(this.managerHandler);
         this.managerHandler.setWorld(world);
         
-        world.init();
+        // world.init();
 
         const gameState = new GameState(this.managerHandler, world);
         this.stateManager.setState(gameState);
