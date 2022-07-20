@@ -25,7 +25,15 @@ export class SkipPhaseButton extends StaticEntity {
     }
 
     wasClickedAt(x, y) {
-        console.log("Skip Phase clicked");
+        //
+    }
+
+    wasHoveredAt(x, y) {
+        //
+    }
+
+    wasBlurred() {
+        //
     }
 
     render(graphics) {
@@ -35,7 +43,7 @@ export class SkipPhaseButton extends StaticEntity {
         graphics.drawText("Skip Phase", this.x + this.padding, this.y + (this.height / 2) + 12, GameConstants.COLORS.CREAM, true, GameConstants.BIG_FONT_SIZE);
 
         // draw collision bounds for debugging
-        graphics.fillStyle = "white";
-        graphics.fillRect(this.x + this.bounds.x, this.y + this.bounds.y, this.bounds.width, this.bounds.height)
+        // graphics.fillStyle = "white";
+        // graphics.fillRect(this.x + this.bounds.x, this.y + this.bounds.y, this.bounds.width, this.bounds.height)
     }
 }

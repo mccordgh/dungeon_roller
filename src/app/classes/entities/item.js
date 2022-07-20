@@ -14,6 +14,7 @@ export class Item extends Entity {
         // this.baseAttack = 4;
 
         this.type = GameConstants.TYPES.ITEM;
+        this.selected = false;
     }
 
     static getDisplayName() {
@@ -21,18 +22,22 @@ export class Item extends Entity {
     }
 
     setDefaultBounds() {
-        const boundsX = Math.floor(this.width / 4);
-
         this.bounds = {
-            x: this.width - boundsX,
+            x: 8,
             y: 0,
-            width: boundsX,
+            width: this.width - 16,
             height: this.height,
         };
     }
 
+    canBeSelectedInCurrentState() {
+        throw new Error(`Can be selected in current state not implemented for ${this}`);
+    }
+
     wasClickedAt() {
-        console.log(`was clicked at: ${this.getDisplayName()}`);
+        if (this.canBeSelectedInCurrentState()) {
+            this.selected = !this.selected;
+        }
     }
 
     tick(dt) {
@@ -43,8 +48,16 @@ export class Item extends Entity {
     }
 
     render(graphics) {
-        graphics.drawSprite(this.bannerAssets.icon, this.x, this.y, this.width, this.height);
+        if (this.selected) {
+            const offsetX = 0;
+            const offsetY = 8;
 
+            graphics.fillStyle = "grey";
+            graphics.fillRect(this.x - offsetX, this.y - offsetY, this.width, this.height + (offsetY * 2));
+        }
+
+        graphics.drawSprite(this.bannerAssets.icon, this.x, this.y, this.width, this.height);
+        
         graphics.drawSprite(this.assets.icon, this.x + 16, this.y + 8, this.width / 2, this.height / 2);
         // if (this.getAnimationFrame()) {
         //     graphics.drawSprite(this.getAnimationFrame(), this.x, this.y, this.width, this.height);

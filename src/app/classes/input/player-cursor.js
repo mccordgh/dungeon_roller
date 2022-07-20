@@ -30,8 +30,8 @@ export class PlayerCursor {
         graphics.drawSprite(this.assets.cursor, this.x - 2, this.y - 1, size, size);
 
         // draw collision bounds for debugging
-        graphics.fillStyle = "red";
-        graphics.fillRect(this.x + this.bounds.x, this.y + this.bounds.y, this.bounds.width, this.bounds.height)
+        // graphics.fillStyle = "red";
+        // graphics.fillRect(this.x + this.bounds.x, this.y + this.bounds.y, this.bounds.width, this.bounds.height)
     }
 
     // swapToComputer() {

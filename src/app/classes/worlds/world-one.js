@@ -39,7 +39,8 @@ export class WorldOne {
         );
 
         this.STATES = {
-            FIGHT_MONSTERS: "fight-monsters",
+            CHOOSE_MONSTER_TO_ATTACK: "choose-monster-to-attack",
+            CHOOSE_ATTACKING_CHAMP: "choose-attacking-champ",
             GAME_WON: 'game-won',
             INITIALIZE: 'initialize',
             INTRO: 'intro',
@@ -57,6 +58,8 @@ export class WorldOne {
 
         this.player = new Player(handler);
         this.enemyParty = new EnemyParty(handler);
+
+        this.selectedBanners = [];
     }
 
     // addCorrectPhoneDialogue(callback) {
@@ -224,7 +227,24 @@ export class WorldOne {
                 break;
 
             case this.STATES.USE_SCROLLS:
-            case this.STATES.FIGHT_MONSTERS:
+                console.log(this.player.hasScrollInParty());
+                if (!this.player.hasScrollInParty()) {
+                    this.state = this.STATES.USE_HERO_POWER;
+                }
+                break;
+            
+            case this.STATES.USE_HERO_POWER:
+                // implement this state later, for now move on to fight monsters
+                this.state = this.STATES.CHOOSE_ATTACKING_CHAMP;
+                break;
+
+            case this.STATES.CHOOSE_ATTACKING_CHAMP:
+                if (this.selectedBanner) {
+                    this.state = this.STATES.CHOOSE_MONSTER_TO_ATTACK;
+                }
+                break;
+
+            case this.STATES.CHOOSE_MONSTER_TO_ATTACK:
             case this.STATES.GAME_WON:
             case this.STATES.INTRO:
             case this.STATES.IDLE:
@@ -249,9 +269,11 @@ export class WorldOne {
                 break;
 
             case this.STATES.USE_SCROLLS:
-            case this.STATES.FIGHT_MONSTERS:
+            case this.STATES.CHOOSE_ATTACKING_CHAMP:
+            case this.STATES.USE_HERO_POWER:
             case this.STATES.ROLL_ENEMIES:
             case this.STATES.GAME_WON:
+            case this.STATES.CHOOSE_MONSTER_TO_ATTACK:
             case this.STATES.INTRO:
             case this.STATES.TEST:
             case this.STATES.IDLE:
@@ -272,7 +294,9 @@ export class WorldOne {
     }
 
     drawStateText(graphics) {
-        let text = "placeholder";
+        let text = "";
+        let text2 = "";
+        let text3 = "";
 
         switch (this.state) {
             case this.STATES.TEST_INIT:
@@ -286,16 +310,28 @@ export class WorldOne {
                 text = "Creating Enemy Party";
                 break;
 
-            case this.STATES.FIGHT_MONSTERS:
-                text = "Fight Monsters";
+            case this.STATES.CHOOSE_ATTACKING_CHAMP:
+                text = "Click one of your banners to attack the enemy party.";
+                text2 = "Hammer kills all Skeletons. Swords all Goblins. Mage hat all slimes."
+                text3 = "Champion helm can kill all of one kind. Any banner can kill 1 of any kind."
+                break;
+
+            case this.STATES.CHOOSE_MONSTER_TO_ATTACK:
+                text = "Now choose a monster in Enemy Party to attack.";
                 break;
 
             case this.STATES.GAME_WON:
                 text = "Game Won";
                 break;
 
-                case this.STATES.USE_SCROLLS:
-                text = "Click a scroll to use it to reroll any number of party and enemy members";
+            case this.STATES.USE_HERO_POWER:
+                text = "Click your Hero to use their power."
+                text2 = "Or click \"Skip Phase\" to move on.";
+                break;
+
+            case this.STATES.USE_SCROLLS:
+                text = "Click a scroll to use it to reroll any number of party and enemy members."
+                text2 = "Or click \"Skip Phase\" to move on.";
             // case this.STATES.INTRO:
             // case this.STATES.TEST:
             // case this.STATES.IDLE:
@@ -306,6 +342,14 @@ export class WorldOne {
         }
 
         graphics.drawText(`Phase: ${text}`, 96, GameConstants.GAME_HEIGHT - 112, GameConstants.COLORS.BLACK, true, GameConstants.FONT_SIZE);
+
+        if (text2) {
+            graphics.drawText(text2, 96, GameConstants.GAME_HEIGHT - 112 + 32, GameConstants.COLORS.BLACK, true, GameConstants.FONT_SIZE);
+        }
+
+        if (text3) {
+            graphics.drawText(text3, 96, GameConstants.GAME_HEIGHT - 112 + 64, GameConstants.COLORS.BLACK, true, GameConstants.FONT_SIZE);
+        }
     }
 
     init() {
@@ -360,8 +404,12 @@ export class WorldOne {
             }
 
             entity.id = i;
+            entity.dontRender = true;
+
             this.player.addToParty(entity);
+            this.entityManager.addEntity(entity);
         }
+
     }
 
     // drawBackground(graphics) {

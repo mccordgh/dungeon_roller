@@ -14,9 +14,21 @@ export class Scroll extends WhiteItem {
         this.assets = Assets.getAssets('scroll');
 
         this.setDefaultBounds();
+
+        const world = this.handler.getWorld();
+
+        this.clickableInStates = [
+            world.STATES.USE_SCROLLS,
+        ];
     }
 
     static getDisplayName() {
         return 'Scroll';
+    }
+
+    canBeSelectedInCurrentState() {
+        const world = this.handler.getWorld();
+
+        return this.clickableInStates.includes(world.state);
     }
 }

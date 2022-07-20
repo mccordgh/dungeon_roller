@@ -35,7 +35,7 @@ export class Champ extends Entity {
     }
 
     wasClickedAt() {
-        console.log(`was clicked at: ${this.getDisplayName()}`);
+        console.log(`was clicked at: ${this.getDisplayName ? this.getDisplayName() : `\nno getDisplayName for ${this}`}`);
     }
 
     tick(dt) {

@@ -46,4 +46,10 @@ export class Player {
         member.y = this.y + this.padding;
         test += member.x - this.x;
     }
+
+    hasScrollInParty() {
+        const scrolls = this.party.filter(item => item.type === GameConstants.TYPES.WHITE_ITEM);
+
+        return scrolls.length > 0;
+    }
 }

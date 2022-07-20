@@ -31,6 +31,8 @@ export class EntityManager {
         for (let i = 0; i < this.entities.length; i += 1) {
             const entity = this.entities[i];
 
+            if (entity.dontRender) continue;
+
             if (!dontRenderTypes.includes(entity.type)) {
                 this.entities[i].render(graphics);
             }
@@ -98,12 +100,6 @@ export class EntityManager {
 
             const entityRect = new Rectangle(entity.x + entity.bounds.x, entity.y + entity.bounds.y, entity.bounds.width, entity.bounds.height);
             
-            if (entity.type === GameConstants.TYPES.STATIC_BUTTON) {
-                console.log("cursor", cursorBounds);
-                console.log("entityRect", entityRect);
-                console.log(entity)
-            }
-
             return cursorBounds.intersects(entityRect); // && clickableTypes.includes(entity.type);
         });
 
@@ -129,8 +125,6 @@ export class EntityManager {
         this.cursor.x = x;
         this.cursor.y = y;
 
-        return; //TODO REMOVE
-        
         const hovered = this.findClickableEntityAt(x, y);
 
         if (!hovered) {
