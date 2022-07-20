@@ -43,6 +43,10 @@ export class EntityManager {
         }
     }
 
+    getSelectedEntities() {
+        return this.entities.filter(entity => entity.selected);
+    }
+
     addEntity(entity, addToFront = false) {
         entity.id = idCounter;
         idCounter += 1;

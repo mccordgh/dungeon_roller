@@ -36,7 +36,11 @@ export class Item extends Entity {
 
     wasClickedAt() {
         if (this.canBeSelectedInCurrentState()) {
-            this.selected = !this.selected;
+            if (!this.selected) {
+                this.handler.getWorld().addSelectedEntity(this);
+            } else {
+                this.handler.getWorld().removeSelectedEntity(this);
+            }
         }
     }
 

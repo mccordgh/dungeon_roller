@@ -59,9 +59,13 @@ export class WorldOne {
         this.player = new Player(handler);
         this.enemyParty = new EnemyParty(handler);
 
-        this.selectedBanners = [];
+        this.clearSelectedEntities();
     }
 
+    clearSelectedEntities() {
+        console.log('clearing selected entities');
+        this.selectedEntities = [];
+    }      
     // addCorrectPhoneDialogue(callback) {
     //     this.dialogue = this.entityManager.addEntity(
     //         new Dialogue(
@@ -218,17 +222,17 @@ export class WorldOne {
                 // this.initDialogue();
                 this.init();
                 this.state = this.STATES.ROLL_ENEMIES;
-                // this.state = this.STATES.INTRO;
                 break;
 
             case this.STATES.ROLL_ENEMIES:
                 this.rollEnemies();
+                this.clearSelectedEntities();
                 this.state = this.STATES.USE_SCROLLS;
                 break;
 
             case this.STATES.USE_SCROLLS:
-                console.log(this.player.hasScrollInParty());
                 if (!this.player.hasScrollInParty()) {
+                    this.clearSelectedEntities();
                     this.state = this.STATES.USE_HERO_POWER;
                 }
                 break;
@@ -291,6 +295,28 @@ export class WorldOne {
         this.entityManager.render(graphics);
 
         this.drawStateText(graphics);
+    }
+
+    addSelectedEntity(entity) {
+        const currentlySelected = this.entityManager.getSelectedEntities();
+
+        currentlySelected.forEach(entity => {
+            this.removeSelectedEntity(entity);
+        });
+
+        entity.selected = true;
+        this.selectedEntities.push(entity);
+
+        console.log(this.selectedEntities);
+    }
+
+    removeSelectedEntity(entity) {
+        console.log('removing', entity);
+        console.log('before', { ...this.selectedEntities});
+        this.selectedEntities = this.selectedEntities.filter(e => e.id != entity.id);
+        console.log('after', { ...this.selectedEntities});
+
+        entity.selected = false;
     }
 
     drawStateText(graphics) {
