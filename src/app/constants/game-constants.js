@@ -12,19 +12,7 @@ if (process.env.NODE_ENV === 'production') {
 export const GameConstants = {
     BIG_FONT_SIZE: 32,
     FONT_SIZE: 18,
-    EMAIL_ITEM_SIZE: 16,
-    APP_NAME_SIZE: 16,
-
-    APPS: {
-        CODE_MAN:'Code Man',
-        FOOTAGE: 'Footage',
-        EMAIL: 'Email',
-        SETTINGS: 'Settings',
-        THE_CORE: 'The Core',
-        ME_MYSELF_I: 'Me, Myself, & I',
-        THE_CODERS_GAME: 'Coder\'s Game',
-    },
-
+   
     COLORS: {
         PURPLE: "#7B538F",
         LIGHT_PURPLE: "#BD7FDB",
@@ -37,41 +25,45 @@ export const GameConstants = {
 
     FPS: 60,
 
-    DIALOGUE: {
-        X: 64,
-        Y: 448,
-        WIDTH: 896,
-        HEIGHT: 256 / 1.5,
-    },
-
-    TELEBUTTON_WIDTH: 35,
-    TELEBUTTON_HEIGHT: 28,
-
-    SCREEN_WIDTH: 512,
-    SCREEN_HEIGHT: 384,
+    // DIALOGUE: {
+    //     X: 64,
+    //     Y: 448,
+    //     WIDTH: 896,
+    //     HEIGHT: 256 / 1.5,
+    // },
 
     GAME_WIDTH: 1024,
     GAME_HEIGHT: 768,
 
-    ICON_HEIGHT: 64,
-    ICON_WIDTH: 64,
+    // TILE_HEIGHT: 64,
+    // TILE_WIDTH: 64,
 
     SPATIAL_GRID_SIZE: 64,
-
-    RADIO_WIDTH: 133,
-    RADIO_HEIGHT: 74,
 
     TYPES: {
         HERO: "hero",
         ENEMY: "enemy",
         BLACK_ITEM: "black-item",
         WHITE_ITEM: "white-item",
-        INTERACTIVE: 'interactive',
     },
 
-    FINGER_WIDTH: 16,
+    WHITE_BANNERS: {
+        CHAMPION: "champion",
+        FIGHTER: "fighter",
+        PALADIN: "paladin",
+        THIEF: "thief",
+        WIZARD: "wizard",
+        SCROLL: "scroll",
+    },
 
-    // rndIndex: (arr) => arr[Math.floor(Math.random() * (arr.length))],
+    BLACK_BANNERS: {
+        DRAGON: "dragon",
+        GOBLIN: "goblin",
+        SKELETON: "skeleton",
+        SLIME: "slime",
+        POTION: "potion",
+        TREASURE_CHEST: "treasure-chest",
+    },
 
     BASE_PATH: basePath,
     ASSETS_PATH: `${basePath}src/resources`,

@@ -28,7 +28,7 @@ export class GraphicsManager {
             text,
             x,
             y,
-            color = GameConstants.COLORS.CREAM,
+            color = GameConstants.COLORS.DARK_PURPLE,
             highlight = true,
             size = GameConstants.FONT_SIZE
         ) => {

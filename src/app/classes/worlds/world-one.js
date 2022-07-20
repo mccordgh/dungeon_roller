@@ -15,6 +15,7 @@ import { Potion } from '../entities/items/potion';
 import { Scroll } from '../entities/items/scroll';
 import { TreasureChest } from '../entities/items/treasure-chest';
 import { Assets } from "../assets/assets";
+import { Player } from '../player';
 
 let counter = 0;
 
@@ -46,8 +47,7 @@ export class WorldOne {
         this.state = this.states.INITIALIZE;
         // this.state = this.states.TEST_INIT;
 
-        this.testAssets = Assets.getAssets('white-banner');
-        this.testChamp = Assets.getAssets('champion');
+        this.player = new Player(handler);
     }
 
     // addCorrectPhoneDialogue(callback) {
@@ -144,26 +144,9 @@ export class WorldOne {
     }
 
     loadEntities() {
-        const entities = [
-            new Champion(this.handler, 64 * 1, 32),
-            new Fighter(this.handler, 64 * 2, 32),
-            new Paladin(this.handler, 64 * 3, 32),
-            new Thief(this.handler, 64 * 4, 32),
-            new Wizard(this.handler, 64 * 5, 32),
-
-            new Dragon(this.handler, 64 * 1, 128),
-            new Goblin(this.handler, 64 * 2, 128),
-            new Skeleton(this.handler, 64 * 3, 128),
-            new Slime(this.handler, 64 * 4, 128),
-
-            new Potion(this.handler, 64 * 1, 224),
-            new Scroll(this.handler,  64 * 2, 224),
-            new TreasureChest(this.handler, 64 * 3, 224),
-        ];
-
-        entities.forEach(entity => {
-            this.entityManager.addEntity(entity);
-        });
+        // this.player.getParty().forEach(entity => {
+        //     this.entityManager.addEntity(entity);
+        // });
     }
 
     tick(deltaTime) {
@@ -212,11 +195,57 @@ export class WorldOne {
                 throw new Error(`World One state "${this.state} is not accounted for`)
         }
 
+        this.player.render(graphics);
+
         this.entityManager.render(graphics);
     }
 
     init() {
+        this.createNewPlayerParty();
         this.loadEntities();
+    }
+
+    createNewPlayerParty() {
+        const whiteBanners = Object.keys(GameConstants.WHITE_BANNERS).map(x => GameConstants.WHITE_BANNERS[x]);
+    
+        this.player.clearParty();
+    
+        for (let i = 0; i < 7; i++) {
+            const entityName = rndIndex(whiteBanners);
+            let entity;
+            
+            switch (entityName) {
+                case GameConstants.WHITE_BANNERS.CHAMPION:
+                    entity = new Champion(this.handler); 
+                    break;
+                
+                case GameConstants.WHITE_BANNERS.FIGHTER:
+                    entity = new Fighter(this.handler);
+                    break;
+
+                case GameConstants.WHITE_BANNERS.PALADIN:
+                    entity = new Paladin(this.handler);
+                    break;
+
+                case GameConstants.WHITE_BANNERS.THIEF:
+                    entity = new Thief(this.handler);
+                    break;
+
+                case GameConstants.WHITE_BANNERS.WIZARD:
+                    entity = new Wizard(this.handler);
+                    break;
+
+                case GameConstants.WHITE_BANNERS.SCROLL:
+                    entity = new Scroll(this.handler);
+                    break;
+
+                default:
+                    throw new Error(`Default case hit for WHITE_BANNERS entity switch. Value: ${entityName}`);
+            }
+
+            entity.id = i;
+            this.player.addToParty(entity);
+        }
     }
 
     // drawBackground(graphics) {

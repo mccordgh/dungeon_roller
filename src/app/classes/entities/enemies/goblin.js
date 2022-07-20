@@ -10,8 +10,6 @@ export class Goblin extends Enemy {
         this.handler = handler;
         this.x = x;
         this.y = y;
-        this.width = width || 32;
-        this.height = height || 32;
 
         this.assets = Assets.getAssets('goblin');
 

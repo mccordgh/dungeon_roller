@@ -9,8 +9,8 @@ export class Champ extends Entity {
         this.handler = handler;
         this.x = x;
         this.y = y;
-        this.width = 32;
-        this.height = 32;
+        this.width = 64;
+        this.height = 64;
         // this.health = 50;
         // this.baseAttack = 4;
 
@@ -46,9 +46,9 @@ export class Champ extends Entity {
     }
 
     render(graphics) {
-        graphics.drawSprite(this.bannerAssets.icon, this.x - 16, this.y - 8, 64, 64);
+        graphics.drawSprite(this.bannerAssets.icon, this.x, this.y, this.width, this.height);
 
-        graphics.drawSprite(this.assets.icon, this.x, this.y, this.width, this.height);
+        graphics.drawSprite(this.assets.icon, this.x + 16, this.y + 8, this.width / 2, this.height / 2);
 
         // if (this.getAnimationFrame()) {
         //     graphics.drawSprite(this.getAnimationFrame(), this.x, this.y, this.width, this.height);
