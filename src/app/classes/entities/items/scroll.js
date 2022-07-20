@@ -19,6 +19,7 @@ export class Scroll extends WhiteItem {
 
         this.clickableInStates = [
             world.STATES.USE_SCROLLS,
+            world.STATES.CHOOSE_BANNERS_TO_REROLL,
         ];
     }
 
@@ -29,12 +30,40 @@ export class Scroll extends WhiteItem {
     canBeSelectedInCurrentState() {
         const world = this.handler.getWorld();
 
+        if (world.state === world.STATES.CHOOSE_BANNERS_TO_REROLL && world.selectedRerollScroll && (world.selectRerollScroll.id === this.id)) {
+            return false;
+        }
+
         return this.clickableInStates.includes(world.state);
+    }
+
+    wasClickedAt() {
+        if (this.canBeSelectedInCurrentState()) {
+            const world = this.handler.getWorld();
+    
+            switch (world.state) {
+                case world.STATES.USE_SCROLLS:
+                    world.selectRerollScroll(this);
+                    break;
+
+                case world.STATES.CHOOSE_BANNERS_TO_REROLL:
+                    if (this.selected) {
+                        world.removeSelectedChamp(this);
+                    } else {
+                        world.addSelectedChamp(this);
+                    }
+                    break;
+
+                default:
+                    throw new Error(`unexpected state in scroll.wasClickedAt() => ${world.state}`);
+            }
+        }
     }
 
     whenSelected() {
         const world = this.handler.getWorld();
 
+        world.selectedRerollScroll = this;
         world.state = world.STATES.CHOOSE_BANNERS_TO_REROLL;
     }
 }

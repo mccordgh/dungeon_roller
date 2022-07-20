@@ -19,23 +19,23 @@ export class ActionButton extends StaticEntity {
 
         this.type = GameConstants.TYPES.ACTION_BUTTON;
         
-        this.actionName = "";
+        this.action = null;
     }
 
     tick() {
 
     }
 
-    setAction(actionName) {
-        this.actionName = actionName;
+    setAction(action) {
+        this.action = action;
     }
 
     clearAction() {
-        this.actionName = "";
+        this.action = null;
     }
 
     wasClickedAt(x, y) {
-        //
+        this.handler.getWorld().actionTaken(this.action);
     }
 
     wasHoveredAt(x, y) {
@@ -47,12 +47,12 @@ export class ActionButton extends StaticEntity {
     }
 
     render(graphics) {
-        if (!this.actionName) return;
+        if (!this.action) return;
 
         graphics.fillStyle = GameConstants.COLORS.DARK_PURPLE;
         graphics.fillRect(this.x, this.y, this.width, this.height);
 
-        graphics.drawText(this.actionName, this.x + this.padding, this.y + (this.height / 2) + 12, GameConstants.COLORS.CREAM, true, GameConstants.BIG_FONT_SIZE);
+        graphics.drawText(this.action, this.x + this.padding, this.y + (this.height / 2) + 12, GameConstants.COLORS.CREAM, true, GameConstants.BIG_FONT_SIZE);
 
         // draw collision bounds for debugging
         // graphics.fillStyle = "white";

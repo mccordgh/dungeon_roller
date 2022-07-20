@@ -43,8 +43,12 @@ export const GameConstants = {
 
     SPATIAL_GRID_SIZE: 64,
 
+    ACTIONS: {
+        REROLL: 'Reroll',
+    },
+
     TYPES: {
-        HERO: "hero",
+        CHAMP: "champ",
         ENEMY: "enemy",
         BLACK_ITEM: "black-item",
         WHITE_ITEM: "white-item",

@@ -43,8 +43,12 @@ export class EntityManager {
         }
     }
 
-    getSelectedEntities() {
-        return this.entities.filter(entity => entity.selected);
+    getSelectedChamps() {
+        return this.entities.filter(entity => entity.selected && entity.type === GameConstants.TYPES.CHAMP);
+    }
+
+    getSelectedEnemies() {
+        return this.entities.filter(entity => entity.selected && entity.type === GameConstants.TYPES.ENEMY);
     }
 
     addEntity(entity, addToFront = false) {

@@ -62,11 +62,23 @@ export class WorldOne {
         this.enemyParty = new EnemyParty(handler);
 
         this.clearSelectedEntities();
+        // this.selectedRerollScroll = null;
+    }
+
+    selectRerollScroll(scroll) {
+        // if (this.selectedRerollScroll) {
+        //     this.selectedRerollScroll.selected = false;
+        // }
+
+        scroll.selected = true;
+        this.selectedRerollScroll = scroll;
     }
 
     clearSelectedEntities() {
         console.log('clearing selected entities');
-        this.selectedEntities = [];
+        this.selectedEnemies = [];
+        this.selectedChamps = [];
+        this.selectedRerollScroll = null;
     }      
     // addCorrectPhoneDialogue(callback) {
     //     this.dialogue = this.entityManager.addEntity(
@@ -167,46 +179,57 @@ export class WorldOne {
         // });
     }
 
-    rollEnemies() {
+    rollEnemy(index) {
         const blackBanners = Object.keys(GameConstants.BLACK_BANNERS).map(x => GameConstants.BLACK_BANNERS[x]);
-    
+
+        const entityName = rndIndex(blackBanners);
+        let entity;
+        
+        switch (entityName) {
+            case GameConstants.BLACK_BANNERS.DRAGON:
+                entity = new Dragon(this.handler); 
+                break;
+            
+            case GameConstants.BLACK_BANNERS.GOBLIN:
+                entity = new Goblin(this.handler);
+                break;
+
+            case GameConstants.BLACK_BANNERS.SKELETON:
+                entity = new Skeleton(this.handler);
+                break;
+
+            case GameConstants.BLACK_BANNERS.SLIME:
+                entity = new Slime(this.handler);
+                break;
+
+            case GameConstants.BLACK_BANNERS.POTION:
+                entity = new Potion(this.handler);
+                break;
+
+            case GameConstants.BLACK_BANNERS.TREASURE_CHEST:
+                entity = new TreasureChest(this.handler);
+                break;
+
+            default:
+                throw new Error(`Default case hit for BLACK_BANNERS entity switch. Value: ${entityName}`);
+        }
+
+        entity.id = index;
+        entity.dontRender = true;
+
+        return entity;
+    }
+
+    rollEnemies() {
         this.enemyParty.clearParty();
     
-        for (let i = 0; i < this.level; i++) {
-            const entityName = rndIndex(blackBanners);
-            let entity;
-            
-            switch (entityName) {
-                case GameConstants.BLACK_BANNERS.DRAGON:
-                    entity = new Dragon(this.handler); 
-                    break;
-                
-                case GameConstants.BLACK_BANNERS.GOBLIN:
-                    entity = new Goblin(this.handler);
-                    break;
+        // TODO: Put back to this.level after testing full hand
+        // for (let i = 0; i < this.level; i++) {
+        for (let i = 0; i < 7; i++) {
+            const entity = this.rollEnemy(i);
 
-                case GameConstants.BLACK_BANNERS.SKELETON:
-                    entity = new Skeleton(this.handler);
-                    break;
-
-                case GameConstants.BLACK_BANNERS.SLIME:
-                    entity = new Slime(this.handler);
-                    break;
-
-                case GameConstants.BLACK_BANNERS.POTION:
-                    entity = new Potion(this.handler);
-                    break;
-
-                case GameConstants.BLACK_BANNERS.TREASURE_CHEST:
-                    entity = new TreasureChest(this.handler);
-                    break;
-
-                default:
-                    throw new Error(`Default case hit for BLACK_BANNERS entity switch. Value: ${entityName}`);
-            }
-
-            entity.id = i;
             this.enemyParty.addToParty(entity);
+            this.entityManager.addEntity(entity);
         }
     }
 
@@ -239,21 +262,21 @@ export class WorldOne {
                     this.state = this.STATES.USE_HERO_POWER;
                 }
 
-                if (this.selectedEntities.length) {
+                if (this.selectedRerollScroll) {
                     const actionButton = this.entityManager.findEntityByType(GameConstants.TYPES.ACTION_BUTTON)[0];
                     
                     if (!actionButton) {
                         throw new Error("Action Button type not found!");
                     }
 
-                    actionButton.setAction("Reroll");
+                    actionButton.setAction(GameConstants.ACTIONS.REROLL);
                     this.state = this.STATES.CHOOSE_BANNERS_TO_REROLL;
                 }
                 break;
             
             case this.STATES.USE_HERO_POWER:
                 // implement this state later, for now move on to fight monsters
-                this.state = this.STATES.CHOOSE_ATTACKING_CHAMP;
+                this.state = this.STATES.CHOOSE_ATTACKING_CHAMP
                 break;
 
             case this.STATES.CHOOSE_ATTACKING_CHAMP:
@@ -306,6 +329,9 @@ export class WorldOne {
         this.player.render(graphics);
         this.enemyParty.render(graphics);
 
+        // Debug purposes
+        graphics.drawText(`State: ${this.state}`, centerX - 240 , centerY + 32 + 16 + 8, GameConstants.COLORS.RED, false, GameConstants.BIG_FONT_SIZE);
+
         graphics.drawText(`Level: ${this.level}`, centerX - 112 , centerY + 16, GameConstants.COLORS.RED, true, GameConstants.MASSIVE_FONT_SIZE);
 
         this.entityManager.render(graphics);
@@ -313,21 +339,75 @@ export class WorldOne {
         this.drawStateText(graphics);
     }
 
-    addSelectedEntity(entity) {
-        const currentlySelected = this.entityManager.getSelectedEntities();
+    actionTaken(actionName) {
+        switch(actionName) {
+            case GameConstants.ACTIONS.REROLL:
+                if (this.state !== this.STATES.CHOOSE_BANNERS_TO_REROLL) {
+                    throw new Error(`REROLL Action taken when state was not choose_banners_to_reroll. State: ${this.state}`)
+                }
 
-        currentlySelected.forEach(entity => {
-            this.removeSelectedEntity(entity);
-        });
+                if (!this.selectedChamps.length && !this.selectedEnemies.length) {
+                    alert("Please select banners in Enemy or Player Party to reroll.")
+                    return;
+                }
 
-        entity.selected = true;
-        this.selectedEntities.push(entity);
+                this.rerollSelectedEntities(this.selectedChamps);
+                this.rerollSelectedEntities(this.selectedEnemies);
+        }
     }
 
-    removeSelectedEntity(entity) {
+    rerollSelectedEntities(entities) {
+        entities.forEach((entity, index) => {
+            if (entity.selected) {
+                switch (entity.type) {
+                    case GameConstants.TYPES.CHAMPION:
+                    case GameConstants.TYPES.WHITE_ITEM:
+                        entity = this.rollChamp(index);
+                        break;
+
+                    case GameConstants.TYPES.ENEMY:
+                    case GameConstants.TYPES.BLACK_ITEM:
+                        entity = this.rollEnemy(index);
+                        break;
+                }
+            }
+        })
+    }
+
+    addSelectedChamp(entity) {
+        entity.selected = true;
+        
+        this.selectedChamps.push(entity);
+        console.log('added champ', entity);
+        console.log(this.selectedChamps);
+        console.log("\n");
+    }
+
+    removeSelectedChamp(entity) {
         entity.selected = false;
         
-        this.selectedEntities = this.selectedEntities.filter(e => e.id != entity.id);
+        this.selectedChamps = this.selectedChamps.filter(e => e.id != entity.id);
+        console.log('removed champ', entity);
+        console.log(this.selectedChamps);
+        console.log("\n");
+    }
+
+    addSelectedEnemy(entity) {
+        entity.selected = true;
+        
+        this.selectedEnemies.push(entity);
+        console.log('added enemy', entity);
+        console.log(this.selectedEnemies);
+        console.log("\n");
+    }
+
+    removeSelectedEnemy(entity) {
+        entity.selected = false;
+        
+        this.selectedEnemy = this.selectedEnemies.filter(e => e.id != entity.id);
+        console.log('added enemy', entity);
+        console.log(this.selectedEnemies);
+        console.log("\n");
     }
 
     drawStateText(graphics) {
@@ -421,13 +501,10 @@ export class WorldOne {
         this.loadEntities();
     }
 
-    rollPlayerParty() {
+    rollChamp(index) {
         const whiteBanners = Object.keys(GameConstants.WHITE_BANNERS).map(x => GameConstants.WHITE_BANNERS[x]);
-    
-        this.player.clearParty();
-    
-        for (let i = 0; i < 7; i++) {
-            const entityName = rndIndex(whiteBanners);
+        
+        const entityName = rndIndex(whiteBanners);
             let entity;
             
             switch (entityName) {
@@ -459,8 +536,17 @@ export class WorldOne {
                     throw new Error(`Default case hit for WHITE_BANNERS entity switch. Value: ${entityName}`);
             }
 
-            entity.id = i;
+            entity.id = index;
             entity.dontRender = true;
+
+            return entity;
+    }
+
+    rollPlayerParty() {
+        this.player.clearParty();
+    
+        for (let i = 0; i < 7; i++) {
+            const entity = this.rollChamp(i);
 
             this.player.addToParty(entity);
             this.entityManager.addEntity(entity);

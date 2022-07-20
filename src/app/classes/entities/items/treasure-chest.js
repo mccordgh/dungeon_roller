@@ -14,6 +14,18 @@ export class TreasureChest extends BlackItem {
         this.assets = Assets.getAssets('treasure-chest');
 
         this.setDefaultBounds();
+
+        const world = this.handler.getWorld();
+
+        this.clickableInStates = [
+            world.STATES.CHOOSE_BANNERS_TO_REROLL,
+        ];
+    }
+
+    canBeSelectedInCurrentState() {
+        const world = this.handler.getWorld();
+
+        return this.clickableInStates.includes(world.state);
     }
 
     static getDisplayName() {

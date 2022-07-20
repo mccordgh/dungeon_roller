@@ -16,26 +16,36 @@ export class Champ extends Entity {
 
         this.bannerAssets = Assets.getAssets('white-banner');
 
-        this.type = GameConstants.TYPES.HERO;
+        this.type = GameConstants.TYPES.CHAMP;
+
+        const world = this.handler.getWorld();
+
+        this.clickableInStates = [
+            world.STATES.CHOOSE_ATTACKING_CHAMP,
+            world.STATES.CHOOSE_BANNERS_TO_REROLL,
+        ];
+
+        this.selected = false;
+    }
+
+    canBeSelectedInCurrentState() {
+        const world = this.handler.getWorld();
+
+        return this.clickableInStates.includes(world.state);
     }
 
     static getDisplayName() {
         throw new Error('Hero must have a "getDisplayName()" method!');
     }
 
-    setDefaultBounds() {
-        const boundsX = Math.floor(this.width / 4);
-
-        this.bounds = {
-            x: this.width - boundsX,
-            y: 0,
-            width: boundsX,
-            height: this.height,
-        };
-    }
-
-    wasClickedAt() {
-        console.log(`was clicked at: ${this.getDisplayName ? this.getDisplayName() : `\nno getDisplayName for ${this}`}`);
+    wasClickedAt(x, y) {
+        if (this.canBeSelectedInCurrentState()) {
+            if (!this.selected) {
+                this.handler.getWorld().addSelectedChamp(this);
+            } else {
+                this.handler.getWorld().removeSelectedChamp(this);
+            }
+        }
     }
 
     tick(dt) {
@@ -46,6 +56,14 @@ export class Champ extends Entity {
     }
 
     render(graphics) {
+        if (this.selected) {
+            const offsetX = 0;
+            const offsetY = 8;
+
+            graphics.fillStyle = "grey";
+            graphics.fillRect(this.x - offsetX, this.y - offsetY, this.width, this.height + (offsetY * 2));
+        }
+        
         graphics.drawSprite(this.bannerAssets.icon, this.x, this.y, this.width, this.height);
 
         graphics.drawSprite(this.assets.icon, this.x + 16, this.y + 8, this.width / 2, this.height / 2);

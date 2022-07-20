@@ -51,6 +51,14 @@ export class Entity {
     // takeDamageFrom(entity) {
     //     this.health -= entity.getAttackDamage();
     // }
+    setDefaultBounds() {
+        this.bounds = {
+            x: 8,
+            y: 0,
+            width: this.width - 16,
+            height: this.height,
+        };
+    }
 
     destroySelf() {
       this.handler.getEntityManager().removeEntity(this);

@@ -21,25 +21,25 @@ export class Item extends Entity {
         throw new Error('Item must have a "getDisplayName()" method!');
     }
 
-    setDefaultBounds() {
-        this.bounds = {
-            x: 8,
-            y: 0,
-            width: this.width - 16,
-            height: this.height,
-        };
-    }
-
     canBeSelectedInCurrentState() {
-        throw new Error(`Can be selected in current state not implemented for ${this}`);
+        console.log(this)
+        throw new Error(`Can be selected in current state not implemented for above ^`);
     }
 
     wasClickedAt() {
         if (this.canBeSelectedInCurrentState()) {
             if (!this.selected) {
-                this.handler.getWorld().addSelectedEntity(this);
+                if (this.type === GameConstants.TYPES.BLACK_ITEM) {
+                    this.handler.getWorld().addSelectedEnemy(this);
+                } else {
+                    this.handler.getWorld().addSelectedChamp(this);
+                }
             } else {
-                this.handler.getWorld().removeSelectedEntity(this);
+                if (this.type === GameConstants.TYPES.BLACK_ITEM) {
+                    this.handler.getWorld().removeSelectedEnemy(this);
+                } else {
+                    this.handler.getWorld().removeSelectedChamp(this);
+                }
             }
         }
     }
