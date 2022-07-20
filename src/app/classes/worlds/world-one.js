@@ -18,6 +18,7 @@ import { Assets } from "../assets/assets";
 import { Player } from '../player';
 import { DragonsLair } from '../entities/locations/dragons-lair';
 import { GraveYard } from '../entities/locations/graveyard';
+import { EnemyParty } from '../enemy-party';
 
 let counter = 0;
 
@@ -51,6 +52,7 @@ export class WorldOne {
         // this.state = this.states.TEST_INIT;
 
         this.player = new Player(handler);
+        this.enemyParty = new EnemyParty(handler);
     }
 
     // addCorrectPhoneDialogue(callback) {
@@ -188,8 +190,6 @@ export class WorldOne {
     render(graphics) {
         const centerX = (GameConstants.GAME_WIDTH / 2);
         const centerY = (GameConstants.GAME_HEIGHT / 2);
-        // this.drawBackground(graphics);
-        // graphics.drawSprite(this.testAssets.icon, 32, 32, 64, 64);
 
         switch (this.state) {
             case this.STATES.TEST_INIT:
@@ -210,8 +210,9 @@ export class WorldOne {
         }
 
         this.player.render(graphics);
+        this.enemyParty.render(graphics);
 
-        graphics.drawText(`Level: ${this.level}`, centerX - 112, centerY - 16, GameConstants.COLORS.RED, true, GameConstants.BIG_FONT_SIZE);
+        graphics.drawText(`Level: ${this.level}`, centerX - 112 , centerY + 16, GameConstants.COLORS.RED, true, GameConstants.MASSIVE_FONT_SIZE);
 
         this.entityManager.render(graphics);
     }
