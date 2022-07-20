@@ -63,7 +63,7 @@ export class Enemy extends Entity {
             graphics.fillStyle = "grey";
             graphics.fillRect(this.x - offsetX, this.y - offsetY, this.width, this.height + (offsetY * 2));
         }
-        
+
         graphics.drawSprite(this.bannerAssets.icon, this.x, this.y, this.width, this.height);
         
         graphics.drawSprite(this.assets.icon, this.x + 16, this.y + 8, this.width / 2, this.height / 2);

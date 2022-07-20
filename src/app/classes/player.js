@@ -18,16 +18,40 @@ export class Player {
         this.setPartyMemberPosition(entity);
 
         this.party.push(entity);
+        this.setPartyIndexes();
+    }
+
+    setPartyIndexes() {
+        this.party.forEach((member, index) => {
+            member.index = index;
+        })
     }
 
     removeFromParty(entity) {
         this.party = this.party.filter(x.id !== entity.id);
+        this.setPartyIndexes();
     }
 
     getParty = () => this.party;
 
     clearParty() {
         this.party = [];
+    }
+
+    replaceRerolledChampsInParty(rerolledChamps) {
+        const test = [ ...this.party];
+
+        this.party = this.party.map(member => {
+            rerolledChamps.forEach((champ, index) => {
+                if (member.id === champ.id) {
+                    champ.index = member.index;
+                    this.setPartyMemberPosition(champ);
+                    member = champ;
+                }
+            });
+
+            return member;
+        });
     }
 
     render(graphics) {
@@ -42,7 +66,7 @@ export class Player {
     }
 
     setPartyMemberPosition(member) {
-        member.x = this.x + this.padding + (member.width * member.id) + this.padding;
+        member.x = this.x + this.padding + (member.width * member.index) + this.padding;
         member.y = this.y + this.padding;
         test += member.x - this.x;
     }

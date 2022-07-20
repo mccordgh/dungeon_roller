@@ -22,7 +22,6 @@ export class Item extends Entity {
     }
 
     canBeSelectedInCurrentState() {
-        console.log(this)
         throw new Error(`Can be selected in current state not implemented for above ^`);
     }
 

@@ -75,7 +75,6 @@ export class WorldOne {
     }
 
     clearSelectedEntities() {
-        console.log('clearing selected entities');
         this.selectedEnemies = [];
         this.selectedChamps = [];
         this.selectedRerollScroll = null;
@@ -214,7 +213,7 @@ export class WorldOne {
                 throw new Error(`Default case hit for BLACK_BANNERS entity switch. Value: ${entityName}`);
         }
 
-        entity.id = index;
+        entity.index = index;
         entity.dontRender = true;
 
         return entity;
@@ -223,7 +222,7 @@ export class WorldOne {
     rollEnemies() {
         this.enemyParty.clearParty();
     
-        // TODO: Put back to this.level after testing full hand
+        // TODO: Put back to this.level after testing full hand size or enemy
         // for (let i = 0; i < this.level; i++) {
         for (let i = 0; i < 7; i++) {
             const entity = this.rollEnemy(i);
@@ -351,26 +350,37 @@ export class WorldOne {
                     return;
                 }
 
-                this.rerollSelectedEntities(this.selectedChamps);
-                this.rerollSelectedEntities(this.selectedEnemies);
+                // console.log({beforeParty: { ...this.player.getParty()}})
+                const rerolledChamps = this.rerollSelectedEntities(this.selectedChamps);
+                this.player.replaceRerolledChampsInParty(rerolledChamps);
+                // console.log({afterParty: { ...this.player.getParty()}})
+
+                // const rerolledEnemies = this.rerollSelectedEntities(this.selectedEnemies);
+                // this.enemyParty.setParty(rerolledEnemies);
+
+                // this.player.setPartyIndexes();
         }
     }
 
     rerollSelectedEntities(entities) {
-        entities.forEach((entity, index) => {
+        return entities.map((entity, index) => {
             if (entity.selected) {
                 switch (entity.type) {
-                    case GameConstants.TYPES.CHAMPION:
+                    case GameConstants.TYPES.CHAMP:
                     case GameConstants.TYPES.WHITE_ITEM:
-                        entity = this.rollChamp(index);
-                        break;
+                        return this.rollChamp(index, entity);
 
                     case GameConstants.TYPES.ENEMY:
                     case GameConstants.TYPES.BLACK_ITEM:
-                        entity = this.rollEnemy(index);
-                        break;
+                        return this.rollEnemy(index);
+                
+                    default:
+                        console.log(entity);
+                        throw new Error(`Unexpected entity.type in world.rerollSelectedEntities => ${entity.type}`)
                 }
             }
+
+            return entity;
         })
     }
 
@@ -378,36 +388,24 @@ export class WorldOne {
         entity.selected = true;
         
         this.selectedChamps.push(entity);
-        console.log('added champ', entity);
-        console.log(this.selectedChamps);
-        console.log("\n");
     }
 
     removeSelectedChamp(entity) {
         entity.selected = false;
         
         this.selectedChamps = this.selectedChamps.filter(e => e.id != entity.id);
-        console.log('removed champ', entity);
-        console.log(this.selectedChamps);
-        console.log("\n");
     }
 
     addSelectedEnemy(entity) {
         entity.selected = true;
         
         this.selectedEnemies.push(entity);
-        console.log('added enemy', entity);
-        console.log(this.selectedEnemies);
-        console.log("\n");
     }
 
     removeSelectedEnemy(entity) {
         entity.selected = false;
         
         this.selectedEnemy = this.selectedEnemies.filter(e => e.id != entity.id);
-        console.log('added enemy', entity);
-        console.log(this.selectedEnemies);
-        console.log("\n");
     }
 
     drawStateText(graphics) {
@@ -501,7 +499,7 @@ export class WorldOne {
         this.loadEntities();
     }
 
-    rollChamp(index) {
+    rollChamp(index, champBeingReplaced = null) {
         const whiteBanners = Object.keys(GameConstants.WHITE_BANNERS).map(x => GameConstants.WHITE_BANNERS[x]);
         
         const entityName = rndIndex(whiteBanners);
@@ -536,8 +534,12 @@ export class WorldOne {
                     throw new Error(`Default case hit for WHITE_BANNERS entity switch. Value: ${entityName}`);
             }
 
-            entity.id = index;
+            entity.index = index;
             entity.dontRender = true;
+
+            if (champBeingReplaced) {
+                entity.id = champBeingReplaced.id;
+            }
 
             return entity;
     }

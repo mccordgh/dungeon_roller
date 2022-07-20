@@ -30,6 +30,10 @@ export class EnemyParty {
         this.party = [];
     }
 
+    setParty(party) {
+        this.party = party;
+    }
+
     render(graphics) {
         graphics.fillStyle = GameConstants.COLORS.LIGHT_PURPLE;
         graphics.fillRect(this.x, this.y, this.width, this.height);

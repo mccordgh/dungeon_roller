@@ -11,6 +11,7 @@ export class Champ extends Entity {
         this.y = y;
         this.width = 64;
         this.height = 64;
+        this.index = null;
         // this.health = 50;
         // this.baseAttack = 4;
 
