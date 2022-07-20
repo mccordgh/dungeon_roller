@@ -19,6 +19,7 @@ import { Player } from '../player';
 import { DragonsLair } from '../entities/locations/dragons-lair';
 import { GraveYard } from '../entities/locations/graveyard';
 import { EnemyParty } from '../enemy-party';
+import { SkipPhaseButton } from '../entities/static-entities/skip-phase-button';
 
 let counter = 0;
 
@@ -39,13 +40,15 @@ export class WorldOne {
 
         this.STATES = {
             FIGHT_MONSTERS: "fight-monsters",
+            GAME_WON: 'game-won',
             INITIALIZE: 'initialize',
             INTRO: 'intro',
             IDLE: 'idle',
             ROLL_ENEMIES: "roll-enemies",
             TEST: 'test',
             TEST_INIT: 'test-init',
-            GAME_WON: 'game-won',
+            USE_SCROLLS: 'use-scrolls',
+            USE_HERO_POWER: 'use-hero-power',
         };
 
         // this.state = this.states.IDLE;
@@ -138,8 +141,6 @@ export class WorldOne {
                 break;
 
             case this.STATES.GAME_WON:
-                this.handler.getEmailManager().addEmail('easterEggs');
-                this.handler.getEmailManager().addEmail('third');
                 this.state = this.STATES.IDLE;
 
                 break;
@@ -150,6 +151,7 @@ export class WorldOne {
     }
 
     loadEntities() {
+        this.entityManager.addEntity(new SkipPhaseButton(this.handler));
         // this.player.getParty().forEach(entity => {
         //     this.entityManager.addEntity(entity);
         // });
@@ -218,9 +220,10 @@ export class WorldOne {
 
             case this.STATES.ROLL_ENEMIES:
                 this.rollEnemies();
-                this.state = this.STATES.FIGHT_MONSTERS;
+                this.state = this.STATES.USE_SCROLLS;
                 break;
 
+            case this.STATES.USE_SCROLLS:
             case this.STATES.FIGHT_MONSTERS:
             case this.STATES.GAME_WON:
             case this.STATES.INTRO:
@@ -245,8 +248,9 @@ export class WorldOne {
             case this.STATES.INITIALIZE:
                 break;
 
-            case this.STATES.ROLL_ENEMIES:
+            case this.STATES.USE_SCROLLS:
             case this.STATES.FIGHT_MONSTERS:
+            case this.STATES.ROLL_ENEMIES:
             case this.STATES.GAME_WON:
             case this.STATES.INTRO:
             case this.STATES.TEST:
@@ -263,16 +267,55 @@ export class WorldOne {
         graphics.drawText(`Level: ${this.level}`, centerX - 112 , centerY + 16, GameConstants.COLORS.RED, true, GameConstants.MASSIVE_FONT_SIZE);
 
         this.entityManager.render(graphics);
+
+        this.drawStateText(graphics);
+    }
+
+    drawStateText(graphics) {
+        let text = "placeholder";
+
+        switch (this.state) {
+            case this.STATES.TEST_INIT:
+                break;
+
+            case this.STATES.INITIALIZE:
+                text = "Initializing..."
+                break;
+
+            case this.STATES.ROLL_ENEMIES:
+                text = "Creating Enemy Party";
+                break;
+
+            case this.STATES.FIGHT_MONSTERS:
+                text = "Fight Monsters";
+                break;
+
+            case this.STATES.GAME_WON:
+                text = "Game Won";
+                break;
+
+                case this.STATES.USE_SCROLLS:
+                text = "Click a scroll to use it to reroll any number of party and enemy members";
+            // case this.STATES.INTRO:
+            // case this.STATES.TEST:
+            // case this.STATES.IDLE:
+                break;
+
+            // default:
+            //     throw new Error(`World One state "${this.state} is not accounted for`)
+        }
+
+        graphics.drawText(`Phase: ${text}`, 96, GameConstants.GAME_HEIGHT - 112, GameConstants.COLORS.BLACK, true, GameConstants.FONT_SIZE);
     }
 
     init() {
         this.level = 1;
         
         const locationsY = 192;
-        this.entityManager.addEntity(new DragonsLair(this.handler, 32, locationsY, GameConstants.GAME_WIDTH / 4, GameConstants.GAME_HEIGHT / 2 ));
+        this.entityManager.addEntity(new DragonsLair(this.handler, 32, locationsY, GameConstants.GAME_WIDTH / 4, GameConstants.GAME_HEIGHT / 4 ));
         
         const graveYardWidth = GameConstants.GAME_WIDTH / 4;
-        this.entityManager.addEntity(new GraveYard(this.handler, GameConstants.GAME_WIDTH - graveYardWidth - 32, locationsY, graveYardWidth, GameConstants.GAME_HEIGHT / 2 ));
+        this.entityManager.addEntity(new GraveYard(this.handler, GameConstants.GAME_WIDTH - graveYardWidth - 32, locationsY, graveYardWidth, GameConstants.GAME_HEIGHT / 4 ));
         
         this.rollPlayerParty();
         this.loadEntities();

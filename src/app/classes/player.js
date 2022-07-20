@@ -11,7 +11,7 @@ export class Player {
         this.padding = 8;
         this.height = 64 + (this.padding * 2);
         this.x = (GameConstants.GAME_WIDTH / 2) - (this.width / 2);
-        this.y = GameConstants.GAME_HEIGHT - 112;
+        this.y = GameConstants.GAME_HEIGHT / 2 + 112 ;
     }
 
     addToParty(entity) {

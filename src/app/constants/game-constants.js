@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 export const GameConstants = {
     BIG_FONT_SIZE: 32,
-    FONT_SIZE: 18,
+    FONT_SIZE: 24,
     MASSIVE_FONT_SIZE: 64,
    
     COLORS: {
@@ -48,6 +48,7 @@ export const GameConstants = {
         ENEMY: "enemy",
         BLACK_ITEM: "black-item",
         WHITE_ITEM: "white-item",
+        STATIC_BUTTON: "static-button",
     },
 
     WHITE_BANNERS: {
