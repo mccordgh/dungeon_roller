@@ -1,7 +1,5 @@
 import { GameConstants } from "../constants/game-constants";
 
-let test = 0;
-
 export class EnemyParty {
     constructor(handler) {
         this.handler = handler;
@@ -12,6 +10,12 @@ export class EnemyParty {
         this.height = 64 + (this.padding * 2);
         this.x = (GameConstants.GAME_WIDTH / 2) - (this.width / 2);
         this.y = 64;
+
+        this.dragonsLair = null;
+    }
+
+    setDragonsLair(lair) {
+        this.dragonsLair = lair;
     }
 
     addToParty(entity) {
@@ -20,8 +24,15 @@ export class EnemyParty {
         this.party.push(entity);
     }
 
+    setPartyIndexes() {
+        this.party.forEach((member, index) => {
+            member.index = index;
+        })
+    }
+
     removeFromParty(entity) {
         this.party = this.party.filter(x.id !== entity.id);
+        this.setPartyIndexes();
     }
 
     getParty = () => this.party;
@@ -30,9 +41,16 @@ export class EnemyParty {
         this.party = [];
     }
 
-    // setParty(party) {
-    //     this.party = party;
-    // }
+    removeAttackedMonsters(monsters) {
+        const ids = monsters.map(monster => monster.id);
+
+        this.party = this.party.filter(member => !ids.includes(member.id));
+        this.setPartyIndexes();    
+        
+        this.party.forEach(member => {
+            this.setPartyMemberPosition(member);
+        });
+    }
 
     replaceRerolledEnemiesInParty(rerolledEnemies) {
         this.party = this.party.map(member => {
@@ -46,6 +64,8 @@ export class EnemyParty {
 
             return member;
         });
+
+        this.setPartyIndexes();
     }
 
     render(graphics) {
@@ -62,6 +82,5 @@ export class EnemyParty {
     setPartyMemberPosition(member) {
         member.x = this.x + this.padding + (member.width * member.index) + this.padding;
         member.y = this.y + this.padding;
-        test += member.x - this.x;
     }
 }

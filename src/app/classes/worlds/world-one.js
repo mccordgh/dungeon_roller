@@ -177,6 +177,23 @@ export class WorldOne {
             const actionButton = this.findActionButton();
             
             actionButton.setAction(GameConstants.ACTIONS.ATTACK);
+        
+            // if attacking champ can kill all of the type of enemy added, check for more and select them automatically
+            if (!this.attackingChamp.canKillAllOfSubType(enemy.subType)) {
+                console.log(`${this.attackingChamp.getDisplayName()} cant kill all of ${enemy.subType}`)
+                return;
+            }
+
+            console.log(`YES ${this.attackingChamp.getDisplayName()} CAN kill all of ${enemy.subType}`)
+
+            this.enemyParty.getParty().forEach(member => {
+                console.log(`${member.subType} === ${enemy.subType} && ${member.id} !== ${enemy.id}`)
+                if (member.subType === enemy.subType && member.id !== enemy.id) {
+                    console.log("adding");
+                    this.addSelectedEnemy(member);
+                }
+            });
+
             return;
         }
 
@@ -413,6 +430,29 @@ export class WorldOne {
                 this.clearActionButtonAction();
                 
                 this.state = this.STATES.USE_HERO_POWER;
+                break;
+
+            case GameConstants.ACTIONS.ATTACK:
+                if (!this.attackingChamp) {
+                    throw new Error("actionTaken() No attackingChamp!");
+                }
+
+                if (this.selectedEnemies.length === 0) {
+                    throw new Error("actionTaken() No selectedEnemies!");
+                }
+
+                this.player.sendToGraveyard(this.attackingChamp);
+                this.attackingChamp.selected = false;
+                this.attackingChamp.attacking = false;
+                this.attackingChamp = null;
+                
+                this.enemyParty.removeAttackedMonsters(this.selectedEnemies);
+                this.selectedEnemies = [];
+
+                break;
+
+            default:
+                throw new Error(`actionTaken() action not recognized ${actionName}`);
         }
     }
 
@@ -560,13 +600,22 @@ export class WorldOne {
         this.level = 1;
         
         const locationsY = 192;
-        this.entityManager.addEntity(new DragonsLair(this.handler, 32, locationsY, GameConstants.GAME_WIDTH / 4, GameConstants.GAME_HEIGHT / 4 ));
+        const dragonsLair = new DragonsLair(this.handler, 32, locationsY, GameConstants.GAME_WIDTH / 4, GameConstants.GAME_HEIGHT / 4 );
+        this.enemyParty.setDragonsLair(dragonsLair);
+        this.entityManager.addEntity(dragonsLair);
         
-        const graveYardWidth = GameConstants.GAME_WIDTH / 4;
-        this.entityManager.addEntity(new GraveYard(this.handler, GameConstants.GAME_WIDTH - graveYardWidth - 32, locationsY, graveYardWidth, GameConstants.GAME_HEIGHT / 4 ));
+        const graveYardWidth = GameConstants.GAME_WIDTH / 4 + 12;
+        const graveYard = new GraveYard(this.handler, GameConstants.GAME_WIDTH - graveYardWidth - 32, locationsY, graveYardWidth, GameConstants.GAME_HEIGHT / 4 );
+        this.player.setGraveYard(graveYard);
+        this.entityManager.addEntity(graveYard);
         
         this.rollPlayerParty();
         this.loadEntities();
+
+        // TESTING CODE REMOVE
+        this.player.getParty().forEach(member => {
+            this.player.sendToGraveyard(member);
+        })
     }
 
     rollChamp(index, champBeingReplaced = null) {

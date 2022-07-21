@@ -1,7 +1,5 @@
 import { GameConstants } from "../constants/game-constants";
 
-let test = 0;
-
 export class Player {
     constructor(handler) {
         this.handler = handler;
@@ -11,7 +9,13 @@ export class Player {
         this.padding = 8;
         this.height = 64 + (this.padding * 2);
         this.x = (GameConstants.GAME_WIDTH / 2) - (this.width / 2);
-        this.y = GameConstants.GAME_HEIGHT / 2 + 112 ;
+        this.y = GameConstants.GAME_HEIGHT / 2 + 112;
+
+        this.graveYard = null;
+    }
+
+    setGraveYard(graveYard) {
+        this.graveYard = graveYard;
     }
 
     addToParty(entity) {
@@ -28,7 +32,7 @@ export class Player {
     }
 
     removeFromParty(entity) {
-        this.party = this.party.filter(x.id !== entity.id);
+        this.party = this.party.filter(member => entity.id !== member.id);
         this.setPartyIndexes();
     }
 
@@ -66,12 +70,16 @@ export class Player {
     setPartyMemberPosition(member) {
         member.x = this.x + this.padding + (member.width * member.index) + this.padding;
         member.y = this.y + this.padding;
-        test += member.x - this.x;
     }
 
     hasScrollInParty() {
         const scrolls = this.party.filter(item => item.type === GameConstants.TYPES.WHITE_ITEM);
 
         return scrolls.length > 0;
+    }
+
+    sendToGraveyard(champ) {
+        this.graveYard.addMember(champ);
+        this.removeFromParty(champ);
     }
 }
