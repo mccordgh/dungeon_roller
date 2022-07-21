@@ -43,6 +43,7 @@ export class WorldOne {
             CHOOSE_MONSTER_TO_ATTACK: "choose-monster-to-attack",
             CHOOSE_ATTACKING_CHAMP: "choose-attacking-champ",
             CHOOSE_BANNERS_TO_REROLL: "choose-banners-to-reoll",
+            DRAGON_ATTACKS: "dragon-attacks",
             GAME_WON: 'game-won',
             INITIALIZE: 'initialize',
             INTRO: 'intro',
@@ -180,16 +181,11 @@ export class WorldOne {
         
             // if attacking champ can kill all of the type of enemy added, check for more and select them automatically
             if (!this.attackingChamp.canKillAllOfSubType(enemy.subType)) {
-                console.log(`${this.attackingChamp.getDisplayName()} cant kill all of ${enemy.subType}`)
                 return;
             }
 
-            console.log(`YES ${this.attackingChamp.getDisplayName()} CAN kill all of ${enemy.subType}`)
-
             this.enemyParty.getParty().forEach(member => {
-                console.log(`${member.subType} === ${enemy.subType} && ${member.id} !== ${enemy.id}`)
                 if (member.subType === enemy.subType && member.id !== enemy.id) {
-                    console.log("adding");
                     this.addSelectedEnemy(member);
                 }
             });
@@ -293,9 +289,17 @@ export class WorldOne {
         for (let i = 0; i < 7; i++) {
             const entity = this.rollEnemy(i);
 
-            this.enemyParty.addToParty(entity);
             this.entityManager.addEntity(entity);
+            
+            if (entity.subType === GameConstants.BLACK_BANNERS.DRAGON) {
+                this.enemyParty.addToDragonsLair(entity);
+            } else {
+                this.enemyParty.addToParty(entity);
+            }
         }
+
+        this.enemyParty.setPartyIndexes();
+        this.enemyParty.setAllPartyMembersPositions();
     }
 
     tick(deltaTime) {
@@ -350,6 +354,7 @@ export class WorldOne {
                 }
                 break;
 
+            case this.STATES.DRAGON_ATTACKS:
             case this.STATES.CHOOSE_BANNERS_TO_REROLL:
             case this.STATES.CHOOSE_MONSTER_TO_ATTACK:
             case this.STATES.GAME_WON:
@@ -449,11 +454,22 @@ export class WorldOne {
                 this.enemyParty.removeAttackedMonsters(this.selectedEnemies);
                 this.selectedEnemies = [];
 
+                this.checkForVictoryOrDefeat();
                 break;
 
             default:
                 throw new Error(`actionTaken() action not recognized ${actionName}`);
         }
+    }
+
+    checkForVictoryOrDefeat() {
+        if (this.enemyParty.length === 0) {
+            alert("You won!");
+            this.state === this.STATES.GAME_WON;
+            return;
+        }
+
+        this.state = this.STATES.CHOOSE_ATTACKING_CHAMP;
     }
 
     rerollSelectedEntities(entities) {
@@ -548,6 +564,12 @@ export class WorldOne {
                 text2 = "Then click \"Reroll\" or click \"Skip Phase\" to cancel.";
                 break;
 
+            case this.STATES.DRAGON_ATTACKS:
+                text = "Oh no! You have rolled 3 dragons, so the Dragon attacks!";
+                text2 = "You must use 2 different types of companions to defeat the Dragon!";
+                break;
+
+
             default:
                 text = "Welcome to Dungeon Roller!";
         }
@@ -613,9 +635,9 @@ export class WorldOne {
         this.loadEntities();
 
         // TESTING CODE REMOVE
-        this.player.getParty().forEach(member => {
-            this.player.sendToGraveyard(member);
-        })
+        // this.player.getParty().forEach(member => {
+        //     this.player.sendToGraveyard(member);
+        // })
     }
 
     rollChamp(index, champBeingReplaced = null) {

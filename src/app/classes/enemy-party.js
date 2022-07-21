@@ -18,6 +18,11 @@ export class EnemyParty {
         this.dragonsLair = lair;
     }
 
+    addToDragonsLair(member) {
+        this.dragonsLair.addMember(member);
+        this.removeFromParty(member);
+    }
+
     addToParty(entity) {
         this.setPartyMemberPosition(entity);
 
@@ -31,8 +36,12 @@ export class EnemyParty {
     }
 
     removeFromParty(entity) {
-        this.party = this.party.filter(x.id !== entity.id);
+        this.party = this.party.filter(member => entity.id !== member.id);
         this.setPartyIndexes();
+        
+        this.party.forEach(member => {
+            this.setPartyMemberPosition(member);
+        });
     }
 
     getParty = () => this.party;
@@ -47,25 +56,41 @@ export class EnemyParty {
         this.party = this.party.filter(member => !ids.includes(member.id));
         this.setPartyIndexes();    
         
+        this.setAllPartyMembersPositions();
+    }
+
+    setAllPartyMembersPositions() {
         this.party.forEach(member => {
             this.setPartyMemberPosition(member);
         });
     }
 
     replaceRerolledEnemiesInParty(rerolledEnemies) {
+        const membersToRemove = [];
+
         this.party = this.party.map(member => {
             rerolledEnemies.forEach((enemy) => {
                 if (member.id === enemy.id) {
-                    enemy.index = member.index;
-                    this.setPartyMemberPosition(enemy);
-                    member = enemy;
+                    if (enemy.subType === GameConstants.BLACK_BANNERS.DRAGON) {
+                        this.addToDragonsLair(enemy);
+                        membersToRemove.push(member);
+                    } else {
+                        enemy.index = member.index;
+                        this.setPartyMemberPosition(enemy);
+                        member = enemy;
+                    }
                 }
             });
 
             return member;
         });
 
+        membersToRemove.forEach(member => {
+            this.removeFromParty(member);
+        })
+
         this.setPartyIndexes();
+        this.setAllPartyMembersPositions();
     }
 
     render(graphics) {
