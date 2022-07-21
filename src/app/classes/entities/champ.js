@@ -41,10 +41,23 @@ export class Champ extends Entity {
 
     wasClickedAt(x, y) {
         if (this.canBeSelectedInCurrentState()) {
-            if (!this.selected) {
-                this.handler.getWorld().addSelectedChamp(this);
-            } else {
-                this.handler.getWorld().removeSelectedChamp(this);
+            const world = this.handler.getWorld();
+
+            switch (world.state) {
+                case world.STATES.CHOOSE_BANNERS_TO_REROLL:
+                    if (!this.selected) {
+                        this.handler.getWorld().addSelectedChamp(this);
+                    } else {
+                        this.handler.getWorld().removeSelectedChamp(this);
+                    }
+                    break;
+
+                case world.STATES.CHOOSE_ATTACKING_CHAMP:
+                    world.setAttackingChamp(this);
+                    break;
+
+                default:
+                    throw new Error(`Unexpected state in champ.wasClickedAt() => ${world.state}`);
             }
         }
     }
@@ -61,7 +74,7 @@ export class Champ extends Entity {
             const offsetX = 0;
             const offsetY = 8;
 
-            graphics.fillStyle = "grey";
+            graphics.fillStyle = this.attacking ? "red" : "grey";
             graphics.fillRect(this.x - offsetX, this.y - offsetY, this.width, this.height + (offsetY * 2));
         }
         

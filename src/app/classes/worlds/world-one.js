@@ -78,6 +78,7 @@ export class WorldOne {
         this.selectedEnemies = [];
         this.selectedChamps = [];
         this.selectedRerollScroll = null;
+        this.attackingChamp = null;
     }      
     // addCorrectPhoneDialogue(callback) {
     //     this.dialogue = this.entityManager.addEntity(
@@ -168,6 +169,18 @@ export class WorldOne {
             default:
                 throw new Error(`World One dialogue finished state "${this.state} is not accounted for`)
         }
+    }
+
+    setAttackingChamp(champ) {
+        // if (this.attackingChamp) {
+        //     this.attackingChamp.selected = false;
+        // }
+
+        champ.selected = true;
+        champ.attacking = true;
+        this.attackingChamp = champ;
+
+        this.state = this.STATES.CHOOSE_MONSTER_TO_ATTACK;
     }
 
     loadEntities() {
