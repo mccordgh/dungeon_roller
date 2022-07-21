@@ -1,3 +1,4 @@
+import { GameConstants } from '../../../constants/game-constants';
 import { Assets } from '../../assets/assets';
 import { BlackItem } from './black-item';
 
@@ -12,6 +13,8 @@ export class Potion extends BlackItem {
         this.y = y;
 
         this.assets = Assets.getAssets('potion');
+
+        this.subType = GameConstants.BLACK_BANNERS.POTION;
 
         this.setDefaultBounds();
 

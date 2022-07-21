@@ -1,3 +1,4 @@
+import { GameConstants } from '../../../constants/game-constants';
 import { Assets } from '../../assets/assets';
 import { Enemy } from '../enemy';
 
@@ -12,6 +13,8 @@ export class Dragon extends Enemy {
         this.y = y;
 
         this.assets = Assets.getAssets('dragon');
+
+        this.subType = GameConstants.BLACK_BANNERS.DRAGON;
 
         this.setDefaultBounds();
     }

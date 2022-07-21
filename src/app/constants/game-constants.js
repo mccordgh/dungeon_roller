@@ -44,6 +44,7 @@ export const GameConstants = {
     SPATIAL_GRID_SIZE: 64,
 
     ACTIONS: {
+        ATTACK: "Attack!",
         REROLL: 'Reroll',
     },
 

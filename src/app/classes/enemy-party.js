@@ -35,8 +35,6 @@ export class EnemyParty {
     // }
 
     replaceRerolledEnemiesInParty(rerolledEnemies) {
-        console.log('before', [... this.party]);
-        console.log(rerolledEnemies)
         this.party = this.party.map(member => {
             rerolledEnemies.forEach((enemy) => {
                 if (member.id === enemy.id) {

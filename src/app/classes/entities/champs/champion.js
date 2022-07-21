@@ -1,5 +1,6 @@
 import { Champ } from "../champ";
 import { Assets } from '../../assets/assets';
+import { GameConstants } from "../../../constants/game-constants";
 
 // const doesNotCollide = [GameConstants.TYPES.GARDEN, GameConstants.TYPES.PLOT, GameConstants.TYPES.LANE];
 
@@ -13,10 +14,16 @@ export class Champion extends Champ {
 
         this.assets = Assets.getAssets('champion');
 
+        this.killsAllOfSubTypes = [
+            GameConstants.BLACK_BANNERS.GOBLIN,
+            GameConstants.BLACK_BANNERS.SKELETON,
+            GameConstants.BLACK_BANNERS.SLIME,
+        ];
+
         this.setDefaultBounds();
     }
 
-    static getDisplayName() {
+    getDisplayName() {
         return 'Champion';
     }
 }

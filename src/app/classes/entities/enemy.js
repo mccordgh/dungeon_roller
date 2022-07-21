@@ -38,12 +38,33 @@ export class Enemy extends Entity {
         return this.clickableInStates.includes(world.state);
     }
 
+    addOrRemoveSelectedEnemy() {
+        if (!this.selected) {
+            this.handler.getWorld().addSelectedEnemy(this);
+        } else {
+            this.handler.getWorld().removeSelectedEnemy(this);
+        }
+    }
+
     wasClickedAt(x, y) {
         if (this.canBeSelectedInCurrentState()) {
-            if (!this.selected) {
-                this.handler.getWorld().addSelectedEnemy(this);
-            } else {
-                this.handler.getWorld().removeSelectedEnemy(this);
+            const world = this.handler.getWorld();
+
+            switch (world.state) {
+                case world.STATES.CHOOSE_BANNERS_TO_REROLL:
+                    this.addOrRemoveSelectedEnemy();
+                    break;
+
+                case world.STATES.CHOOSE_MONSTER_TO_ATTACK:
+                    if (this.selected) {
+                        world.removeSelectedEnemy(this);
+                    } else {
+                        world.tryAddEnemyToSelected(this);
+                    }
+                    break;
+
+                default:
+                    throw new Error(`Unexpected state in champ.wasClickedAt() => ${world.state}`);
             }
         }
     }

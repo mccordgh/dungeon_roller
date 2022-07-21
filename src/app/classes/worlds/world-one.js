@@ -171,6 +171,36 @@ export class WorldOne {
         }
     }
 
+    tryAddEnemyToSelected(enemy) {
+        if (this.selectedEnemies.length === 0) {
+            this.addSelectedEnemy(enemy);
+            const actionButton = this.findActionButton();
+            
+            actionButton.setAction(GameConstants.ACTIONS.ATTACK);
+            return;
+        }
+
+        const firstEnemy = this.selectedEnemies[0];
+
+        // never allowed to have different types of enemies selected to attack at once.
+        const tryingToAddSameEnemySubType = firstEnemy.subType === enemy.subType;
+
+        if (!tryingToAddSameEnemySubType) {
+            alert("You can only attack one type of enemy at a time.");
+            return;
+        }
+
+        // assuming we only are letting in all monsters of same type
+        const canKillAll = this.attackingChamp.canKillAllOfSubType(firstEnemy.subType);
+
+        if (!canKillAll) {
+            alert(`${this.attackingChamp.getDisplayName()} can only kill one ${firstEnemy.subType} at a time.`);
+            return;
+        }
+
+        this.addSelectedEnemy(enemy);
+    }
+
     setAttackingChamp(champ) {
         // if (this.attackingChamp) {
         //     this.attackingChamp.selected = false;
@@ -182,6 +212,8 @@ export class WorldOne {
 
         this.state = this.STATES.CHOOSE_MONSTER_TO_ATTACK;
     }
+
+    findActionButton = () => this.entityManager.findEntityByType(GameConstants.TYPES.ACTION_BUTTON)[0];
 
     loadEntities() {
         this.entityManager.addEntity(new ActionButton(this.handler));
@@ -279,7 +311,7 @@ export class WorldOne {
                 }
 
                 if (this.selectedRerollScroll) {
-                    const actionButton = this.entityManager.findEntityByType(GameConstants.TYPES.ACTION_BUTTON)[0];
+                    const actionButton = this.findActionButton();
                     
                     if (!actionButton) {
                         throw new Error("Action Button type not found!");
@@ -427,7 +459,7 @@ export class WorldOne {
     removeSelectedEnemy(entity) {
         entity.selected = false;
         
-        this.selectedEnemy = this.selectedEnemies.filter(e => e.id != entity.id);
+        this.selectedEnemies = this.selectedEnemies.filter(e => e.id != entity.id);
     }
 
     drawStateText(graphics) {

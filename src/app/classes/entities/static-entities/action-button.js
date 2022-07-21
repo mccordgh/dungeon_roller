@@ -47,7 +47,6 @@ export class ActionButton extends StaticEntity {
     }
 
     render(graphics) {
-        console.log(this.action);
         if (!this.action) return;
 
         graphics.fillStyle = GameConstants.COLORS.DARK_PURPLE;

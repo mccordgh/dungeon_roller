@@ -13,10 +13,12 @@ export class Thief extends Champ {
 
         this.assets = Assets.getAssets('thief');
 
+        this.killsAllOfSubTypes = [];
+
         this.setDefaultBounds();
     }
 
-    static getDisplayName() {
+    getDisplayName() {
         return 'Thief';
     }
 }

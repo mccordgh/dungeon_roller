@@ -35,7 +35,7 @@ export class Champ extends Entity {
         return this.clickableInStates.includes(world.state);
     }
 
-    static getDisplayName() {
+    getDisplayName() {
         throw new Error('Hero must have a "getDisplayName()" method!');
     }
 
@@ -67,6 +67,10 @@ export class Champ extends Entity {
 
         // this.move();
         // this.assets.icon.tick();
+    }
+
+    canKillAllOfSubType(subType) {
+        return this.killsAllOfSubTypes.includes(subType);
     }
 
     render(graphics) {

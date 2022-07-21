@@ -1,3 +1,4 @@
+import { GameConstants } from '../../../constants/game-constants';
 import { Assets } from '../../assets/assets';
 import { Enemy } from '../enemy';
 
@@ -12,6 +13,8 @@ export class Skeleton extends Enemy {
         this.y = y;
 
         this.assets = Assets.getAssets('skeleton');
+
+        this.subType = GameConstants.BLACK_BANNERS.SKELETON;
 
         this.setDefaultBounds();
     }
