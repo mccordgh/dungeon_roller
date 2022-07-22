@@ -75,7 +75,7 @@ export class EntityManager {
     }
 
     removeEntity(entity) {
-        let index = this.entities.indexOf(entity);
+        // let index = this.entities.indexOf(entity);
 
         this.handler.getWorld().getSpatialGrid().remove(
             new Rectangle(
@@ -83,7 +83,8 @@ export class EntityManager {
             ), entity
         );
 
-        this.entities.splice(index, 1);
+        // this.entities.splice(index, 1);
+        this.entities = this.entities.filter(e => e.id !== entity.id);
         entity = undefined;
     }
 

@@ -19,7 +19,7 @@ export class Goblin extends Enemy {
         this.setDefaultBounds();
     }
 
-    static getDisplayName() {
+    getDisplayName() {
         return 'Goblin';
     }
 }

@@ -23,7 +23,7 @@ export class Scroll extends WhiteItem {
         ];
     }
 
-    static getDisplayName() {
+    getDisplayName() {
         return 'Scroll';
     }
 

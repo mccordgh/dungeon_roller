@@ -10,8 +10,8 @@ export class Entity {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.id = -1; // ID will be determined by entityManager
-        this.index = -1; // Position in party array will be determined later
+        this.id = null; // ID will be determined by entityManager
+        this.index = null; // Position in party array will be determined later
 
         this.bounds = new Rectangle(0, 0, this.width, this.height);
     }

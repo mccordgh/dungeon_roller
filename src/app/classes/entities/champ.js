@@ -40,6 +40,7 @@ export class Champ extends Entity {
     }
 
     wasClickedAt(x, y) {
+        console.log("champ clicked: ", this.index, this.id, this.getDisplayName());
         if (this.canBeSelectedInCurrentState()) {
             const world = this.handler.getWorld();
 

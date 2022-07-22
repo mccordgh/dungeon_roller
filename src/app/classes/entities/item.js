@@ -26,6 +26,7 @@ export class Item extends Entity {
     }
 
     wasClickedAt() {
+        console.log("item clicked: ", this.index, this.id, this.getDisplayName());
         if (this.canBeSelectedInCurrentState()) {
             if (!this.selected) {
                 if (this.type === GameConstants.TYPES.BLACK_ITEM) {

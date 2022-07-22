@@ -47,12 +47,22 @@ export class Player {
             rerolledChamps.forEach((champ) => {
                 if (member.id === champ.id) {
                     champ.index = member.index;
-                    this.setPartyMemberPosition(champ);
+                    this.handler.getWorld().removeEntity(member);
                     member = champ;
+                    this.handler.getWorld().addEntity(member);
                 }
             });
 
             return member;
+        });
+
+        this.setPartyIndexes();
+        this.setAllPartyMembersPositions();
+    }
+
+    setAllPartyMembersPositions() {
+        this.party.forEach(member => {
+            this.setPartyMemberPosition(member);
         });
     }
 

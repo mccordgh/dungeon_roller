@@ -274,9 +274,9 @@ export class WorldOne {
         entity.index = index;
         entity.dontRender = true;
 
-        if (champBeingReplaced) {
-            entity.id = champBeingReplaced.id;
-        }
+        // if (champBeingReplaced) {
+        //     entity.id = champBeingReplaced.id;
+        // }
 
         return entity;
     }
@@ -421,15 +421,28 @@ export class WorldOne {
                     return;
                 }
 
+                console.log('entities before', this.entityManager.entities.map(x => x.getDisplayName ? x.getDisplayName() : x));
+
+                console.log('enemy party before');
+                this.enemyParty.getParty().forEach(item => { console.log(item.index, item.id, item.getDisplayName())});
+                console.log("----");
                 const rerolledChamps = this.rerollSelectedEntities(this.selectedChamps);
                 this.player.replaceRerolledChampsInParty(rerolledChamps);
 
                 const rerolledEnemies = this.rerollSelectedEntities(this.selectedEnemies);
+                console.log('rerolled enemies');
+                rerolledEnemies.forEach(item => { console.log(item.index, item.id, item.getDisplayName())});
+                console.log("---");
                 this.enemyParty.replaceRerolledEnemiesInParty(rerolledEnemies);
+
+                console.log('enemy party after');
+                this.enemyParty.getParty().forEach(item => { console.log(item.index, item.id, item.getDisplayName())});
 
                 if (this.selectedRerollScroll) {
                     this.selectedRerollScroll.selected = false;
                 }
+
+                console.log('entities after', this.entityManager.entities.map(x => x.getDisplayName ? x.getDisplayName() : x));
                 
                 this.clearSelectedEntities();
                 this.clearActionButtonAction();
@@ -474,15 +487,22 @@ export class WorldOne {
 
     rerollSelectedEntities(entities) {
         return entities.map((entity, index) => {
+            let rerolled;
             if (entity.selected) {
                 switch (entity.type) {
                     case GameConstants.TYPES.CHAMP:
                     case GameConstants.TYPES.WHITE_ITEM:
-                        return this.rollChamp(index, entity);
+                        rerolled = this.rollChamp(index, entity);
+                        this.entityManager.addEntity(rerolled);
+                        rerolled.id = entity.id;
+                        return rerolled;
 
                     case GameConstants.TYPES.ENEMY:
                     case GameConstants.TYPES.BLACK_ITEM:
-                        return this.rollEnemy(index, entity);
+                        rerolled = this.rollEnemy(index, entity);
+                        this.entityManager.addEntity(rerolled);
+                        rerolled.id = entity.id;
+                        return rerolled;
                 
                     default:
                         console.log(entity);
@@ -678,9 +698,9 @@ export class WorldOne {
             entity.index = index;
             entity.dontRender = true;
 
-            if (champBeingReplaced) {
-                entity.id = champBeingReplaced.id;
-            }
+            // if (champBeingReplaced) {
+            //     entity.id = champBeingReplaced.id;
+            // }
 
             return entity;
     }

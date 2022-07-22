@@ -19,7 +19,7 @@ export class Skeleton extends Enemy {
         this.setDefaultBounds();
     }
 
-    static getDisplayName() {
+    getDisplayName() {
         return 'Skeleton';
     }
 }

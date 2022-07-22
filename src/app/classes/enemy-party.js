@@ -38,10 +38,6 @@ export class EnemyParty {
     removeFromParty(entity) {
         this.party = this.party.filter(member => entity.id !== member.id);
         this.setPartyIndexes();
-        
-        this.party.forEach(member => {
-            this.setPartyMemberPosition(member);
-        });
     }
 
     getParty = () => this.party;
@@ -66,31 +62,37 @@ export class EnemyParty {
     }
 
     replaceRerolledEnemiesInParty(rerolledEnemies) {
-        const membersToRemove = [];
-
         this.party = this.party.map(member => {
             rerolledEnemies.forEach((enemy) => {
                 if (member.id === enemy.id) {
-                    if (enemy.subType === GameConstants.BLACK_BANNERS.DRAGON) {
-                        this.addToDragonsLair(enemy);
-                        membersToRemove.push(member);
-                    } else {
-                        enemy.index = member.index;
-                        this.setPartyMemberPosition(enemy);
-                        member = enemy;
-                    }
+                    enemy.index = member.index;
+                    enemy.id = -1 // temporary to dodge deletion by next line
+                    this.handler.getWorld().entityManager.removeEntity(member);
+                    enemy.id = member.id;
+                    member = enemy;
                 }
             });
 
             return member;
-        });
+        }).reverse();;
 
-        membersToRemove.forEach(member => {
-            this.removeFromParty(member);
-        })
+        console.log('after replacing', [ ...this.party.map(item => item.getDisplayName())])
+
+        this.sendAllDragonsToLair();
 
         this.setPartyIndexes();
         this.setAllPartyMembersPositions();
+    }
+
+    sendAllDragonsToLair() {
+        for (let i = 0; i < this.party.length; i++) {
+            const member = this.party[i];
+
+            if (member && member.subType === GameConstants.BLACK_BANNERS.DRAGON) {
+                this.addToDragonsLair(member);
+            }
+        }
+        console.log("send to lair after", [ ...this.party.map(item => item.getDisplayName())])
     }
 
     render(graphics) {

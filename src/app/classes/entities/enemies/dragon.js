@@ -19,7 +19,7 @@ export class Dragon extends Enemy {
         this.setDefaultBounds();
     }
 
-    static getDisplayName() {
+    getDisplayName() {
         return 'Dragon';
     }
 }

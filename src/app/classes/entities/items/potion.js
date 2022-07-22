@@ -31,7 +31,7 @@ export class Potion extends BlackItem {
         return this.clickableInStates.includes(world.state);
     }
     
-    static getDisplayName() {
+    getDisplayName() {
         return 'Potion';
     }
 }

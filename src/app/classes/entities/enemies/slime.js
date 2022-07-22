@@ -19,7 +19,7 @@ export class Slime extends Enemy {
         this.setDefaultBounds();
     }
 
-    static getDisplayName() {
+    getDisplayName() {
         return 'Slime';
     }
 }
