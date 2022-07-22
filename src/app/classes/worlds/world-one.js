@@ -15,10 +15,10 @@ import { Potion } from '../entities/items/potion';
 import { Scroll } from '../entities/items/scroll';
 import { TreasureChest } from '../entities/items/treasure-chest';
 import { Assets } from "../assets/assets";
-import { Player } from '../player';
+import { PlayerParty } from '../parties/player-party';
 import { DragonsLair } from '../entities/locations/dragons-lair';
 import { GraveYard } from '../entities/locations/graveyard';
-import { EnemyParty } from '../enemy-party';
+import { EnemyParty } from '../parties/enemy-party';
 import { SkipPhaseButton } from '../entities/static-entities/skip-phase-button';
 import { ActionButton } from '../entities/static-entities/action-button';
 
@@ -59,7 +59,7 @@ export class WorldOne {
         this.state = this.STATES.INITIALIZE;
         // this.state = this.states.TEST_INIT;
 
-        this.player = new Player(handler);
+        this.player = new PlayerParty(handler);
         this.enemyParty = new EnemyParty(handler);
 
         this.clearSelectedEntities();
@@ -421,29 +421,16 @@ export class WorldOne {
                     return;
                 }
 
-                console.log('entities before', this.entityManager.entities.map(x => x.getDisplayName ? x.getDisplayName() : x));
-
-                console.log('enemy party before');
-                this.enemyParty.getParty().forEach(item => { console.log(item.index, item.id, item.getDisplayName())});
-                console.log("----");
                 const rerolledChamps = this.rerollSelectedEntities(this.selectedChamps);
-                this.player.replaceRerolledChampsInParty(rerolledChamps);
+                this.player.replaceRerolledPartyMembers(rerolledChamps);
 
                 const rerolledEnemies = this.rerollSelectedEntities(this.selectedEnemies);
-                console.log('rerolled enemies');
-                rerolledEnemies.forEach(item => { console.log(item.index, item.id, item.getDisplayName())});
-                console.log("---");
-                this.enemyParty.replaceRerolledEnemiesInParty(rerolledEnemies);
-
-                console.log('enemy party after');
-                this.enemyParty.getParty().forEach(item => { console.log(item.index, item.id, item.getDisplayName())});
+                this.enemyParty.replaceRerolledPartyMembers(rerolledEnemies);
 
                 if (this.selectedRerollScroll) {
                     this.selectedRerollScroll.selected = false;
                 }
 
-                console.log('entities after', this.entityManager.entities.map(x => x.getDisplayName ? x.getDisplayName() : x));
-                
                 this.clearSelectedEntities();
                 this.clearActionButtonAction();
                 
